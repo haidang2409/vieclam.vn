@@ -1241,6 +1241,200 @@ class MembersController extends AppController
     }
 
 
+    function print_resume()
+    {
+        $this->layout = 'ajax';
+        $this->Member->recursive = -1;
+        $member_id = isset($this->params['member_id'])? $this->params['member_id']: '';
+        $members_employers = $this->Member->find('first', array(
+            'joins' => array(
+                array(
+                    'table' => 'levels',
+                    'alias' => 'Level',
+                    'type' => 'LEFT',
+                    'foreignKey' => false,
+                    'conditions' => 'Member.level_id = Level.id'
+                ),
+                array(
+                    'table' => 'provinces',
+                    'alias' => 'Province',
+                    'type' => 'LEFT',
+                    'foreignKey' => false,
+                    'conditions' => 'Member.province_id = Province.id'
+                )
+            ),
+            'fields' => array(
+                'Member.*',
+                'Level.*',
+                'Province.provincename'
+            ),
+            'conditions' => array(
+                'Member.id' => $member_id,
+                'Member.allow_search' => 1
+            )
+        ));
+        if($members_employers)
+        {
+            //Lấy thông tin liên quan đến hồ sơ của ứng viên
+            $members_degrees = null;
+            $this->Member->MemberDegree->recursive = -1;
+            $members_degrees = $this->Member->MemberDegree->find('all', array(
+                'joins' => array(
+                    array(
+                        'table' => 'degrees',
+                        'alias' => 'Degree',
+                        'type' => 'INNER',
+                        'foreignKey' => false,
+                        'conditions' => 'MemberDegree.degree_id = Degree.id'
+                    )
+                ),
+                'fields' => array('*'),
+                'order' => array('Degree.sort' => 'DESC'), //Để lấy bằng cao nhất vị trí [0] trong mảng
+                'conditions' => array('MemberDegree.member_id' => $member_id)
+            ));
+            //Skill Kỹ năng
+            $members_skills = null;
+            $this->Member->MemberSkill->recursive = -1;
+            $members_skills = $this->Member->MemberSkill->find('all', array(
+                'joins' => array(
+                    array(
+                        'table' => 'skills',
+                        'alias' => 'Skill',
+                        'type' => 'INNER',
+                        'foreignKey' => false,
+                        'conditions' => 'MemberSkill.skill_id = Skill.id'
+                    )
+                ),
+                'fields' => array('*'),
+                'conditions' => array('MemberSkill.member_id' => $member_id)
+            ));
+            //Refer tham khảo
+            $refers = null;
+            $this->Member->Refer->recursive = -1;
+            $refers = $this->Member->Refer->find('all', array(
+                'conditions' => array('member_id' => $member_id)
+            ));
+            //MemberLanguage
+            $members_languages = null;
+            $this->Member->MemberLanguage->recursive = -1;
+            $members_languages = $this->Member->MemberLanguage->find('all', array(
+                'joins' => array(
+                    array(
+                        'table' => 'languages',
+                        'alias' => 'Language',
+                        'type' => 'INNER',
+                        'foreignKey' => false,
+                        'conditions' => 'MemberLanguage.language_id = Language.id'
+                    ),
+                    array(
+                        'table' => 'languages_levels',
+                        'alias' => 'LanguageLevel',
+                        'type' => 'INNER',
+                        'foreignKey' => false,
+                        'conditions' => 'MemberLanguage.language_level_id = LanguageLevel.id'
+                    )
+                ),
+                'fields' => array('*'),
+                'order' => array('Language.language_name' => 'ASC'),
+                'conditions' => array('MemberLanguage.member_id' => $member_id)
+            ));
+            //Lịch sử làm việc
+            $words = null;
+            $this->Member->Work->recursive = -1;
+            $words = $this->Member->Work->find('all', array(
+                'conditions' => array('Work.member_id' => $member_id),
+                'order' => array('Work.is_now' => 'DESC', 'Work.to' => 'DESC', 'id' => 'DESC')
+            ));
+            //Việc làm mong muốn
+            $desires = null;
+            $this->Member->Desire->recursive = -1;
+            $desires = $this->Member->Desire->find('first', array(
+                'joins' => array(
+                    array(
+                        'table' => 'levels',
+                        'alias' => 'Level',
+                        'type' => 'INNER',
+                        'foreignKey' => false,
+                        'conditions' => 'Desire.level_id = Level.id'
+                    )
+                ),
+                'fields' => array('*'),
+                'conditions' => array('Desire.member_id' => $member_id)
+            ));
+            $desires_jobs = null;
+            $desires_province = null;
+            $desire_benefits = null;
+            if($desires)
+            {
+                $desire_id = $desires['Desire']['id'];
+                //Các ngành nghề mong muốn
+                $this->Member->Desire->DesireJob->recursive = -1;
+                $desires_jobs = $this->Member->Desire->DesireJob->find('all', array(
+                    'joins' => array(
+                        array(
+                            'table' => 'jobs',
+                            'alias' => 'Job',
+                            'type' => 'INNER',
+                            'foreignKey' => false,
+                            'conditions' => 'DesireJob.job_id = Job.id'
+                        )
+                    ),
+                    'fields' => array('*'),
+                    'conditions' => array('DesireJob.desire_id' => $desire_id)
+                ));
+                //Nơi làm việc mong muốn
+                $this->Member->Desire->DesireProvince->recursive = -1;
+                $desires_province = $this->Member->Desire->DesireProvince->find('all', array(
+                    'joins' => array(
+                        array(
+                            'table' => 'provinces',
+                            'alias' => 'Province',
+                            'type' => 'INNER',
+                            'foreignKey' => false,
+                            'conditions' => 'DesireProvince.province_id = Province.id'
+                        )
+                    ),
+                    'fields' => array('*'),
+                    'conditions' => array('DesireProvince.desire_id' => $desire_id)
+                ));
+                //Phú lợi mong muốn
+                $this->Member->Desire->DesireBenefit->recursive = -1;
+                $desire_benefits = $this->Member->Desire->DesireBenefit->find('all', array(
+                    'joins' => array(
+                        array(
+                            'table' => 'benefits',
+                            'alias' => 'Benefit',
+                            'type' => 'INNER',
+                            'foreignKey' => false,
+                            'conditions' => 'DesireBenefit.benefit_id = Benefit.id'
+                        )
+                    ),
+                    'fields' => array('*'),
+                    'conditions' => array('DesireBenefit.desire_id' => $desire_id),
+                ));
+            }
+            $this->set(array(
+                'members' => $members_employers,
+                'members_degrees' => $members_degrees,
+                'members_skills' => $members_skills,
+                'refers' => $refers,
+                'members_languages' => $members_languages,
+                'works' => $words,
+                'desires' => $desires,
+                'desires_jobs' => $desires_jobs,
+                'desires_provinces' => $desires_province,
+                'desires_benefits' => $desire_benefits,
+                'title' => 'Hồ sơ ứng viên ' . $members_employers['Member']['fullname'] . ' | ' . $members_employers['Member']['title'],
+            ));
+        }
+        else
+        {
+            $this->redirect($this->_base_url_employer . '/tim-ung-vien');
+        }
+        $this->Mpdf->init();
+        $this->Mpdf->setFilename('resume.pdf');
+        $this->Mpdf->setOutput('D');
+    }
 
     //Employer
     ///////////////////////////////

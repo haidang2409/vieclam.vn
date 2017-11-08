@@ -1,4 +1,4 @@
-<div class="container member-recruitment">
+<div class="container member-recruitment print-container">
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
             <div class="row">
@@ -40,7 +40,7 @@
                             <?php
                         }
                         ?>
-                        <button class="btn btn-info btn-sm"><i class="fa fa-print"></i> In hồ sơ</button>
+                        <button class="btn btn-info btn-sm" id="btnPrintResume" data-member_id="<?php echo $members['Member']['id'];?>"><i class="fa fa-print"></i> In hồ sơ</button>
                         <button data-toggle="dropdown" class="btn btn-sm btn-yellow dropdown-toggle" aria-expanded="false">
                             <i class="ace-icon fa fa-angle-down icon-only"></i>
                         </button>
@@ -334,4 +334,11 @@
         </div>
     </div>
 </div>
-
+<script>
+    $(function () {
+        $('#btnPrintResume').click(function () {
+            var member_id = $(this).data('member_id');
+            window.location = '/nha-tuyen-dung/in-ho-so/' + member_id;
+        });
+    });
+</script>

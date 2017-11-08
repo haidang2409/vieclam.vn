@@ -80,6 +80,7 @@ Router::connect('/tim-viec-lam/:province_link-:province_id',
         'province_id' => '[p][0-9]+'
     )
 );
+
 Router::connect('/tim-viec-lam/nha-tuyen-dung/:company_link-:company_id',
     array(
         'controller' => 'recruitments',
@@ -127,6 +128,7 @@ Router::connect('/bai-viet/:postlink-:id',
         'id' => '[0-9-]+'
     )
 );
+
 
 
 
@@ -181,6 +183,16 @@ Router::connect($_base_url_employer . '/tim-ung-vien/detail/:member_id',
     array(
         'controller' => 'members',
         'action' => 'view_resume_search',
+    ),
+    array(
+        'pass' => array('member_id'),
+        'member_id' => '[0-9]+'
+    )
+);
+Router::connect($_base_url_employer . '/in-ho-so/:member_id',
+    array(
+        'controller' => 'members',
+        'action' => 'print_resume',
     ),
     array(
         'pass' => array('member_id'),

@@ -32,7 +32,7 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
     public $helpers = array('Js' => array('Jquery'), 'Paginator', 'Lib', 'Html', 'Form', 'Session');//, 'DebugKit.Toolbar');
-    public $components = array('RequestHandler', 'Paginator', 'Session', 'Cookie', 'Library');//, 'DebugKit.Toolbar');
+    public $components = array('RequestHandler', 'Paginator', 'Session', 'Cookie', 'Library', 'Mpdf');//, 'DebugKit.Toolbar');
     //////////////////////
     public $path_company_logo = '../webroot/uploads/company/logo';
     public $path_company_image = '../webroot/uploads/company/image';
