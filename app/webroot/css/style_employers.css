@@ -1,0 +1,579 @@
+/*Navbar*/
+
+.navbar-custom
+{
+    background-color: #199EB8 !important;
+    border: none;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus
+{
+    background-color: transparent !important;
+    color: #ffffff;
+}
+/*.navbar-right*/
+/*{*/
+    /*padding-right: 0 !important;*/
+/*}*/
+.dropdown-menu > li > a
+{
+    font-size: 14px !important;
+    padding-bottom: 7px;
+    padding-top: 6px;
+}
+.dropdown-menu > li > a > span
+{
+    padding-right: 5px;
+}
+.dropdown-menu > li.active:hover > a, .dropdown-menu > li.active > a, .dropdown-menu > li:hover > a, .dropdown-menu > li > a:active, .dropdown-menu > li > a:focus
+{
+    background-color: #199EB8;
+}
+/*End navbar*/
+
+.error-label
+{
+    color: #E74C3C;
+}
+.label-require
+{
+    color: #ec971f;
+}
+/*Form*/
+/*Button*/
+.btn
+{
+    border-radius: 0 !important;
+}
+.btn-no-radius
+{
+    border-radius: 3px !important;
+}
+
+.btn-index
+{
+    background-color: #199EB8 !important;
+    border-color: #199EB8 !important;
+    color: #ffffff;
+}
+.btn-index:hover
+{
+    color: #ffffff;
+    background-color: #199EB8CC !important;
+}
+.btn[disabled]:focus, .btn[disabled]:hover, .btn[disabled]
+{
+    background-color: #199EB8CC !important;
+    color: white;
+}
+select.select-100
+{
+    width: 100% !important;
+}
+
+.select2-container--default .select2-selection--single
+{
+    border-radius: 0 !important;
+}
+.select2-container .select2-selection--single
+{
+    height: 34px !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered
+{
+    line-height: 34px !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow
+{
+    height: 34px !important;
+}
+.form-register .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-left: 35px !important;
+}
+.select2-container--default .select2-selection--single
+{
+    border: 1px solid #ccc !important;
+}
+/*Multiple*/
+.select2-container .select2-selection--multiple
+{
+    /*height: 35px;*/
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice
+{
+    margin-top: 3px;
+}
+.select2-container--default .select2-selection .select2-selection__choice__remove
+{
+    float: right;
+    margin-right: 0;
+    margin-left: 3px;
+}
+/*.select2-results__option*/
+/*{*/
+    /*width: 50%;*/
+    /*float: left;*/
+    /*border-bottom: 1px dotted #d5d5d5;*/
+    /*border-right: 1px dotted #d5d5d5;*/
+/*}*/
+.select2-container--default .select2-selection--single .select2-selection__placeholder
+{
+    color: silver;
+}
+.select2-container--default .select2-selection
+{
+    border-color: silver;
+}
+/*Input*/
+form
+{
+    color: #73879C !important;
+}
+.form-group input[type="text"], .form-group input[type="password"], .form-group select, .form-group textarea
+{
+    /*border-radius: 3px !important;*/
+    -ms-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0, 0, 0, 0.08) inset !important;
+    -o-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0, 0, 0, 0.08) inset !important;
+    box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0, 0, 0, 0.08) inset !important;
+    border: 1px solid #c8c8c8;
+    color: #777;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%
+}
+.form-group input[type="text"]:focus, .form-group input[type="password"]:focus, .form-group select:focus, .form-group textarea:focus
+ {
+    -ms-box-shadow: none !important;
+    -o-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid #199EB8 !important;
+    outline: none !important;
+}
+/*End form*/
+input.error
+{
+    border: 1px dotted #E74C3C !important;
+}
+select.error
+{
+    border: 1px dotted #E74C3C !important;
+}
+textarea.error
+{
+    border: 1px dotted #E74C3C !important;
+}
+label.error
+{
+    padding-top: 5px;
+    color: #E74C3C;
+}
+.errorClass
+{
+    border-color: #E74C3C  !important;
+}
+.errorLabel
+{
+    color: #E74C3C  !important;
+    font-size: 13px;
+    font-style: italic;
+}
+.form_has_addon input[type=text], .form_has_addon input[type=email], .form_has_addon input[type=password], .form_has_addon select
+{
+    /*padding-left: 30px;*/
+}
+.error-message
+{
+    color: #E74C3C;
+    font-size: 13px;
+    padding: 5px 5px 5px 0;
+}
+.div-hint
+{
+    padding-top: 5px;
+    font-style: italic;
+    color: #9d9d9d;
+    font-size: 14px;
+}
+.label-require
+{
+    color: #ec971f;
+}
+
+
+    /*Add recruitment*/
+input.ace.ace-checkbox-2[type="checkbox"]:checked + .lbl::before, input.ace.ace-checkbox-2[type="radio"]:checked + .lbl::before
+{
+    background-color: #199EB8;
+    border-color: #199EB8;
+}
+input.ace.ace-switch.ace-switch-6[type="checkbox"]:checked + .lbl::before
+{
+    background-color: #199EB8;
+}
+    /*Job*/
+.a-job-status
+{
+    text-decoration: none !important;
+    padding: 2px 5px;
+    background-color: #d5d5d5;
+    color: white;
+    margin-right: 7px;
+    border-radius: 5px;
+    line-height: 20px;
+    display: inline-block;
+    margin-bottom: 7px;
+}
+.a-job-status:hover
+{
+    color: white;
+    background-color: #d0d0d0;
+}
+.a-job-status.active
+{
+    background-color: #199EB8;
+}
+.a-index
+{
+    color: #199EB8;
+    text-decoration: none !important;
+    font-size: 1.2em;
+}
+.a-index:hover
+{
+    color: #199EB8CC;
+}
+.list-job-action
+{
+    display: block;
+    padding: 5px 0;
+}
+.list-job-action a
+{
+    color: #73879C;
+    text-decoration: none !important;
+}
+.list-job-action a:hover
+{
+    color: #199EB8CC;
+}
+.span-expiry
+{
+    height: 3px;
+    width: 80px;
+    background-color: #D5D5D5;
+    display: block;
+    text-align: left;
+}
+.count-expiry
+{
+    height: 3px;
+    width: 30%;
+    background-color: #199EB8;
+    content: '';
+}
+.tr-note
+{
+    font-size: 13px;
+    font-style: italic;
+}
+    /*End Job*/
+    /*Candidate*/
+.container-candidate .checkbox
+{
+    margin: 0 auto;
+}
+.container-candidate .checkbox label
+{
+    padding-left: 10px;
+}
+.container-candidate
+{
+    padding-top: 15px;
+    min-height: 400px;
+    overflow-x: auto;
+}
+.container-candidate .un-read
+{
+    background-color: #eeeeee;
+}
+    /*Dropdown Status*/
+.dropdown-status
+{
+    margin-top: -1px;
+    margin-bottom: -1px;
+    padding-top: 0;
+    padding-bottom: 0;
+    bottom: auto !important;
+}
+.dropdown-status li
+{
+    margin: auto 0 !important;
+}
+.dropdown-status li a:hover
+{
+    background-color: #EEEEEE !important;
+}
+.dropdown-status li a
+{
+    color: #939393;
+}
+.dropdown-status li a i.s
+{
+    color: #65c25f;
+}
+.dropdown-status li a i.o
+{
+    color: #199EB8;
+}
+.dropdown-status li a i.m
+{
+    color: #FF4500;
+}
+.dropdown-status li a i.i
+{
+    color: #ff1cdc;
+}
+.dropdown-status li a i.f
+{
+    color: #E74C3C;
+}
+.dropdown-status li a i.d
+{
+    color: #474747;
+}
+    /*Span in table*/
+.span-status i
+{
+    padding-right: 5px;
+}
+.span-status i.s
+{
+    color: #65c25f;
+}
+.span-status i.o
+{
+    color: #199EB8;
+}
+.span-status i.m
+{
+    color: #FF4500;
+}
+.span-status i.i
+{
+    color: #ff1cdc;
+}
+.span-status i.f
+{
+    color: #E74C3C;
+}
+.span-status i.d
+{
+    color: #474747;
+}
+    /*Dropdown All*/
+.dropdown-all.dropdown-close.dropdown-menu-right
+{
+    margin-top: 5px;
+    right: 5px;
+}
+    /*End Candidate*/
+    /*View Member Recruitment*/
+.member-recruitment
+{
+
+}
+.member-recruitment .recruitment-title
+{
+    margin-bottom: 15px;
+}
+.member-recruitment .general div
+{
+    margin-top: 5px;
+}
+.member-recruitment .general .statistic span
+{
+    padding-right: 15px;
+}
+.member-recruitment .general .contact table tr td
+{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.member-recruitment .image img
+{
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+}
+.member-recruitment .table-resume tr td:first-child
+{
+    font-weight: bold;
+}
+    /*End View Member Recruitment*/
+    /*Resume Saved*/
+.tree .tree-branch .tree-branch-header, .tree .tree-item
+{
+    padding: 8px 5px;
+}
+.div-a-add-folder
+{
+    padding: 10px 5px;
+}
+.a-add-folder
+{
+    text-decoration: none !important;
+}
+.frm-add-folder, .frm-edit-folder
+{
+    border-top: 1px dotted #D5D5D5;
+    margin-top: 10px;
+    padding-top: 10px;
+    display: none;
+}
+.dropdown-colorpicker
+{
+    padding-top: 7px;
+}
+.folder-action
+{
+    font-size: 1.3em;
+    display: none;
+    float: right;
+}
+.folder-action .edit-folder:hover
+{
+    color: #6FB3E0;
+}
+.folder-action .delete-folder:hover
+{
+    color: #B74635;
+}
+.tree-branch-header
+{
+    margin-left: 5px;
+    padding-left: 10px !important;
+}
+.tree-branch-header:hover .folder-action
+{
+    display: block;
+}
+.folder-o
+{
+    left: 0;
+    top: 8px;
+}
+    /*End Resume Saved*/
+    /*Search Resume*/
+.frm-search-resume .ace-icon
+{
+    width: 18px;
+}
+.frm-search-resume .input-group-addon
+{
+    background-color: #ffffff;
+}
+
+.frm-search-resume input[type=text]
+{
+    height: 38px;
+}
+.frm-search-resume .select2-container .select2-selection--single
+{
+height: 38px !important;
+}
+
+    /*Resume Result*/
+.result-resume .item
+{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #D5D5D5;
+}
+.result-resume .item h4
+{
+    font-weight: bold;
+    /*margin-top: 5px !important;*/
+    margin-bottom: 5px !important;
+}
+.result-resume .item h4 a
+{
+    text-decoration: none !important;
+}
+.result-resume .item h4 a:hover
+{
+    color: orange;
+}
+    /*End Search Resume*/
+
+.text-note
+{
+    font-size: 1.1em;
+    font-style: italic;
+}
+
+    /*Footer*/
+.footer
+{
+    margin-top: 20px;
+    background-color: #dedede;
+}
+.footer h3
+{
+    margin: 10px 0 !important;
+}
+.footer a
+{
+    line-height: 25px;
+    text-decoration: none;
+}
+.btn-social
+{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: white;
+    font-size: 2em;
+    padding-right: 10px;
+}
+
+.div-link-social
+{
+    padding: 5px 0;
+}
+
+.color_primary
+{
+    color: #199EB8 !important;
+}
+
+@media (max-width: 768px) {
+    select
+    {
+        margin-top: 10px !important;
+    }
+}
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a
+    {
+        color: #ffffff;
+    }
+    .text-note
+    {
+        padding-bottom: 15px;
+        padding-top: 10px;
+    }
+    .frm-search-resume form#frmSearchResume .form-group .col-sm-6:nth-child(2)
+    {
+        margin-top: 10px;
+    }
+}
+@media (max-width: 530px) {
+    .select2-results__option
+    {
+        width: 100% !important;
+    }
+}
+@media (max-width: 290px) {
+
+}
