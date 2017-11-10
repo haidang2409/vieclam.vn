@@ -445,7 +445,7 @@ BODY;
         return $html;
     }
 
-    function email_forget_password($fullname, $email, $code_change)
+    function email_forget_password($email, $code_change)
     {
         $server = 'http://' . $_SERVER['HTTP_HOST'];
 
@@ -490,21 +490,9 @@ BODY;
                                             <tbody>
                                                 <tr>
                                                     <td class="table-col-td" width="378" style="font-family: Arial, sans-serif; line-height: 19px; color: #444444; font-size: 13px; font-weight: normal; width: 378px;" valign="top" align="left">
-                                                        <table class="header-row" width="378" cellspacing="0" cellpadding="0" border="0" style="table-layout: fixed;">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="header-row-td" width="378" style="font-family: Arial, sans-serif; font-weight: normal; line-height: 19px; color: #199EB8; margin: 0px; font-size: 18px; padding-bottom: 10px; padding-top: 15px;" valign="top" align="left">
-                                                                        <div style="text-align: center; margin-bottom: 15px">
-                                                                            <a href="$server"><img src="$this->logo"></a>
-                                                                        </div>
-                                                                        Xin chào $fullname!
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
                                                         <div style="font-family: Arial, sans-serif; line-height: 20px; color: #444444; font-size: 13px;">
                                                             <b style="color: #777777;">
-                                                            Bạn vừa yêu cầu hệ thống đặt lại mật khẩu cho bạn
+                                                            Hệ thống nhận được yêu cầu đặt lại mật khẩu
                                                             </b>
                                                             <br>
                                                             Vui lòng nhấn vào Đặt lại mật khẩu để tiếp tục
@@ -557,7 +545,7 @@ BODY;
                                                 <tr>
                                                     <td class="table-col-td" width="378" style="font-family: Arial, sans-serif; line-height: 19px; color: #444444; font-size: 13px; font-weight: normal; width: 378px;" valign="top" align="left">
                                                         <div style="font-family: Arial, sans-serif; line-height: 19px; color: #444444; font-size: 13px; text-align: center;">
-                                                            <a href="$server/members/reset_password?code=$code_change&email=$email" style="color: #ffffff; text-decoration: none; margin: 0px; text-align: center; vertical-align: baseline; border: 4px solid #6fb3e0; padding: 4px 9px; font-size: 15px; line-height: 21px; background-color: #6fb3e0;">&nbsp; Đặt lại mật khẩu &nbsp;</a>
+                                                            <a href="$server/nha-tuyen-dung/dat-lai-mat-khau?code=$code_change&email=$email" style="color: #ffffff; text-decoration: none; margin: 0px; text-align: center; vertical-align: baseline; border: 4px solid #6fb3e0; padding: 4px 9px; font-size: 15px; line-height: 21px; background-color: #6fb3e0;">&nbsp; Đặt lại mật khẩu &nbsp;</a>
                                                         </div>
                                                         <table class="table-space" height="16" style="height: 16px; font-size: 0px; line-height: 0; width: 378px; background-color: #ffffff;" width="378" bgcolor="#FFFFFF" cellspacing="0" cellpadding="0" border="0"><tbody><tr><td class="table-space-td" valign="middle" height="16" style="height: 16px; width: 378px; background-color: #ffffff;" width="378" bgcolor="#FFFFFF" align="left">&nbsp;</td></tr></tbody></table>
                                                     </td>

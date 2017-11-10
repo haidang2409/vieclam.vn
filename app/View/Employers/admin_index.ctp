@@ -51,11 +51,15 @@
                     echo $this->Session->flash();
                     if(isset($employers) && count($employers) > 0)
                     {
+                        $page = $this->request->paging['Employer']['page'];
+                        $limit = $this->request->paging['Employer']['limit'];
+                        $number = ($page - 1) * $limit;
+                        $i = 0;
                         ?>
                         <table class="table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th>Stt</th>
+                                <th class="text-center">Stt</th>
                                 <th><?php echo $this->Paginator->sort('Employer.company_name', 'Nhà tuyển dụng');?></th>
                                 <th><?php echo $this->Paginator->sort('Employer.email', 'Email');?></th>
                                 <th><?php echo $this->Paginator->sort('Employer.phone', 'Điện thoại');?></th>
@@ -66,19 +70,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <?php
-                            $count = 0;
-                            ?>
                             <?php foreach($employers as $item): ?>
                                 <tr>
-                                    <td>
+                                    <td class="text-center">
                                         <?php
-                                        echo $count + 1;
-                                        $count = $count + 1;
+                                        echo $number + ($i + 1);
+                                        $i = $i + 1;
                                         ?>
                                     </td>
                                     <td>
-                                        <a class="bolder" href="/admin/employers/view_detail/<?php echo $item['Employer']['id']; ?>">
+                                        <a href="/admin/employers/view_detail/<?php echo $item['Employer']['id']; ?>">
                                             <?php echo htmlentities($item['Employer']['company_name'], ENT_QUOTES, 'UTF-8'); ?>
                                         </a>
                                     </td>

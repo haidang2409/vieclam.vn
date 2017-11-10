@@ -29,7 +29,7 @@ class Employer extends AppModel
             'foreignKey' => 'employer_id'
         ),
         'EmployerJob' => array(
-            'className' => 'Employer',
+            'className' => 'EmployerJob',
             'foreignKey' => 'employer_id'
         ),
         'Folder' => array(
@@ -137,18 +137,18 @@ class Employer extends AppModel
             )
         ),
         'phone' => array(
-            'notBlank' => array(
-                'rule' => 'notBlank',
-                'message' => 'Nhập số điện thoại'
-            ),
-            'numeric' => array(
-                'rule' => 'numeric',
-                'message' => 'Nhập đúng số điện thoại'
-            ),
-            'between' => array(
-                'rule' => array('between', 10, 11),
-                'message' => 'Nhập đúng số điện thoại'
-            )
+//            'notBlank' => array(
+//                'rule' => 'notBlank',
+//                'message' => 'Nhập số điện thoại'
+//            ),
+//            'numeric' => array(
+//                'rule' => 'numeric',
+//                'message' => 'Nhập đúng số điện thoại'
+//            ),
+//            'between' => array(
+//                'rule' => array('between', 10, 11),
+//                'message' => 'Nhập đúng số điện thoại'
+//            )
         ),
         //Update
         'address' => array(

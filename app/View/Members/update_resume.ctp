@@ -650,7 +650,7 @@
                             </label>
                             <div class="col-sm-7">
                                 <?php
-                                echo $this->Form->input('title', array('id' => 'title', 'class' => '', 'label' => false, 'value' => $members['Member']['title'], 'title' => 'Chức danh'));
+                                echo $this->Form->input('title', array('id' => 'title', 'class' => '', 'label' => false, 'value' => $members['Member']['title'], 'title' => 'Chức danh', 'placeholder' => 'Ví dụ: \'PHP Developer\' hoặc \'Sales Manager\''));
                                 ?>
                                 <span hidden="hidden" class="error-label error-title">Chức danh không được để trống</span>
                             </div>
@@ -1425,7 +1425,7 @@
                                 </label>
                                 <div>
                                     <?php
-                                    echo $this->Form->input('desire_salary', array('id' => 'desire_salary', 'type' => 'text', 'label' => false, 'class' => 'form-control', 'value' => $desire_salary));
+                                    echo $this->Form->input('desire_salary', array('id' => 'desire_salary', 'type' => 'text', 'label' => false, 'class' => 'form-control', 'value' => number_format($desire_salary, 0, '', ',')));
                                     ?>
                                     <span hidden="hidden" class="error-label error-desire_salary">Nhập mức lương mong muốn</span>
                                 </div>
@@ -1556,6 +1556,8 @@
 
         }).on('change', function(){
         });
-
+        $('#desire_salary').keyup(function () {
+            format_num(this);
+        });
     })
 </script>

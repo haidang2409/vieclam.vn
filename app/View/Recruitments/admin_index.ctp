@@ -34,6 +34,7 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                         <tr>
+                            <th class="text-center">Stt</th>
                             <th><?php echo $this->Paginator->sort('Recruitment.title', 'Việc làm');?></th>
                             <th><?php echo $this->Paginator->sort('Employer.company_name', 'Nhà tuyển dụng');?></th>
                             <th class="text-center"><?php echo $this->Paginator->sort('Order.expiry', 'Hết hạn');?></th>
@@ -47,25 +48,33 @@
                         $cur_date = $date['year'] . '-' . $date['mon'] . '-' . $date['mday'];
                         if(isset($jobs) && count($jobs) > 0)
                         {
+                            $page = $this->request->paging['Recruitment']['page'];
+                            $limit = $this->request->paging['Recruitment']['limit'];
+                            $number = ($page - 1) * $limit;
                             $i = 0;
                             foreach ($jobs as $item)
                             {
                                 $arr_id_recruitment[$i] = $item['Recruitment']['id'];
-                                $i = $i + 1;
                                 ?>
                                 <tr>
                                     <td>
-                                        <a class="bolder" href="/admin/recruitments/view_detail/<?php echo $item['Recruitment']['id'];?>">
+                                        <?php
+                                        echo $number + ($i + 1);
+                                        $i = $i + 1;
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/recruitments/view_detail/<?php echo $item['Recruitment']['id'];?>">
                                             <?php
                                             echo htmlentities($item['Recruitment']['title'], ENT_QUOTES, 'UTF-8');
                                             ?>
                                         </a>
-                                        <div>
-                                            <a href="<?php echo $_base_url_employer;?>/sua-viec-lam/<?php echo $item['Recruitment']['id'];?>">
+                                        <div style="margin-top: 5px">
+                                            <a class="orange" href="/admin/recruitments/edit/<?php echo $item['Recruitment']['id'];?>">
                                                 Sửa
                                             </a>
                                             |
-                                            <a href="javascript: void(0)" class="btn-delete-job" data-id="<?php echo $item['Recruitment']['id'];?>">
+                                            <a href="javascript: void(0)" class="red btn-delete-job" data-id="<?php echo $item['Recruitment']['id'];?>">
                                                 Xóa
                                             </a>
                                         </div>
@@ -103,7 +112,7 @@
                         {
                             ?>
                             <tr>
-                                <td colspan="4" align="center">
+                                <td colspan="6" align="center">
                                     <p style="font-size: 1.2em; font-style: italic">
                                         Không có việc làm
                                     </p>

@@ -262,7 +262,9 @@ if(isset($arr_recruitments_saved) && count($arr_recruitments_saved) > 0)
                                     <div class="checkbox">
                                         <label>
                                             <input name="" class="ace s_level" type="checkbox" value="<?php echo $level['Level']['id'];?>" <?php if($level['Level']['id'] == $level_id) { echo 'checked';}?>>
-                                            <span class="lbl"> <?php echo $level['Level']['levelname'];?></span>
+                                            <span class="lbl" <?php if($level['Level']['id'] == $level_id) { echo 'style="font-weight: bolder;"';}?>>
+                                                <?php echo $level['Level']['levelname'];?>
+                                            </span>
                                         </label>
                                     </div>
                                     <?php
@@ -288,7 +290,9 @@ if(isset($arr_recruitments_saved) && count($arr_recruitments_saved) > 0)
                                     <div class="checkbox">
                                         <label>
                                             <input name="" class="ace s_salary" value="<?php echo $s['value'];?>" type="checkbox" <?php if($s['value'] == $s_salary) { echo 'checked';};?>>
-                                            <span class="lbl"> <?php echo $s['text'];?></span>
+                                            <span class="lbl" <?php if($s['value'] == $s_salary) { echo 'style="font-weight: bolder;"';};?>>
+                                                <?php echo $s['text'];?>
+                                            </span>
                                         </label>
                                     </div>
                                     <?php

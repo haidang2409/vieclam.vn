@@ -96,7 +96,7 @@ class EmployersController extends AppController
     {
         if($this->Session->check('S_Employer'))
         {
-            $this->redirect($this->_base_url_employer . '/manager');
+            $this->redirect($this->_base_url_employer);
         }
         $this->layout = 'ajax';
         if($this->request->is('post'))
@@ -130,7 +130,7 @@ class EmployersController extends AppController
                         'last_login' => $last_login
                     );
                     $this->Employer->save($data_update);
-                    $this->redirect($this->_base_url_employer . '/manager');
+                    $this->redirect($this->_base_url_employer);
                 }
             }
             else
@@ -145,13 +145,129 @@ class EmployersController extends AppController
         $this->Session->delete('S_Employer');
         $this->redirect($this->_base_url_employer);
     }
-    function forget_password()
+    public function forget_password()
     {
+        //
+        $this->layout = 'ajax';
+        if($this->Session->check('S_Employer'))
+        {
+            $this->redirect('/nha-tuyen-dung');
+        }
+        //
+        if($this->request->is('post'))
+        {
+            $email = isset($this->request->data['email'])? $this->request->data['email']: '';
+            $this->Employer->recursive = -1;
+            $employers = $this->Employer->findByEmail($email);
+            if(!$employers)
+            {
+                $this->Session->setFlash('Không tìm thấy email');
+            }
+            else
+            {
+                $code_change = md5(md5($email . mt_rand()));
+                $this->Employer->recursive = -1;
+                if($this->Employer->updateAll(array('code_change_password' => "'$code_change'"), array('Employer.id' => $employers['Employer']['id'], 'Employer.email' => $email)))
+                {
+                    //Send mail
+                    $Email = new CakeEmail('smtp');
+                    $Email->to($email);
+                    $Email->subject('Yêu cầu đặt lại mật khẩu');
+                    $Email->emailFormat('html');
+                    $Email->message();
+                    $body = $this->Mailtemplate->email_forget_password($email, $code_change);
+                    try
+                    {
+                        $Email->send($body);
+                    }
+                    catch (Exception $exception)
+                    {
 
+                    }
+                    $this->redirect('/nha-tuyen-dung/change_password_status?status=sent_email&code=' . md5(mt_rand()));
+                }
+            }
+        }
     }
-    function reset_password()
+    public function reset_password()
     {
-
+        $this->layout = 'ajax';
+        $code = isset($this->params['url']['code'])? $this->params['url']['code']: '';
+        $email = isset($this->params['url']['email'])? $this->params['url']['email']: '';
+        //
+        $this->Employer->recursive = -1;
+        $employers = $this->Employer->find('first', array(
+            'fields' => array(
+                'Employer.id',
+                'Employer.email'
+            ),
+            'conditions' => array(
+                'Employer.email' => $email,
+                'Employer.code_change_password' => $code
+            )
+        ));
+        if(!$employers)
+        {
+            $this->redirect('/nha-tuyen-dung/change_password_status?status=fail&code=' . md5(mt_rand()));
+        }
+        else
+        {
+            //
+            $this->set(array('title' => 'Đặt lại mật khẩu'));
+        }
+        if($this->request->is('post') || $this->request->is('put'))
+        {
+            $password = $this->request->data['password_new'];
+            $re_password = $this->request->data['re_password_new'];
+            if(trim($password) == '')
+            {
+                $this->Session->setFlash('Vui lòng nhập mật khẩu');
+            }
+            else
+            {
+                if(trim($re_password) == '')
+                {
+                    $this->Session->setFlash('Vui lòng nhập lại mật khẩu');
+                }
+                else
+                {
+                    if(strlen($password) < 8)
+                    {
+                        $this->Session->setFlash('Mật khẩu từ 8 ký tự');
+                    }
+                    else
+                    {
+                        if($password != $re_password)
+                        {
+                            $this->Session->setFlash('Mật khẩu không khớp nhau');
+                        }
+                        else
+                        {
+                            $pass_new = AuthComponent::password($re_password);
+                            $data_update_member = array(
+                                'Employer.id' => $employers['Employer']['id'],
+                                'Employer.email' => $email,
+                                'Employer.code_change_password' => $code
+                            );
+                            if($this->Employer->updateAll(array('password' => "'$pass_new'", 'code_change_password' => "''"), array($data_update_member)))
+                            {
+                                $this->redirect('/nha-tuyen-dung/change_password_status?status=success&code=' . md5(mt_rand()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    function change_password_status()
+    {
+        $this->layout = 'ajax';
+        $status = isset($this->params['url']['status'])? $this->params['url']['status']: '';
+        if($status == '')
+        {
+            $this->redirect('/nha-tuyen-dung');
+        }
+        $this->set(array('status' => $status));
     }
     function profile()
     {
@@ -227,7 +343,6 @@ class EmployersController extends AppController
         }
         //Get list Jobs
         $jobs = null;
-//        $this->Employer->EmployerJob->Job->recursive = -1;
         ClassRegistry::init('Job')->recursive = -1;
         $job = ClassRegistry::init('Job')->find('all', array(
             'conditions' => array()
@@ -247,7 +362,7 @@ class EmployersController extends AppController
                 'scales' => $scales,
                 'provinces' => $provinces,
                 'employers' => $employers,
-                'title' => 'Cập nhật thông tin'
+                'title' => 'Cập nhật thông tin nhà tuyển dụng'
             )
         );
         //////////////////////////////
@@ -256,28 +371,106 @@ class EmployersController extends AppController
         {
             //Kiem tra nganh nghe
             $data_employers_jobs = $this->request->data['Employer']['employers_jobs'];
-            if(count($data_employers_jobs) == 0)
+            if(count($data_employers_jobs) == 0 || $data_employers_jobs == '')
             {
-
+                $this->Session->setFlash('Vui lòng chọn ngành nghề', 'flashWarning');
             }
-            $employer_id = $this->Session->read('S_Employer.id');
-            $this->Employer->id = $employer_id;
-            $this->Employer->save($this->request->data);
+            else
+            {
+                $employer_id = $this->Session->read('S_Employer.id');
+                $this->Employer->id = $employer_id;
+                if($this->Employer->save($this->request->data))
+                {
+                    //Xóa ngành nghề cũ
+                    $this->Employer->EmployerJob->deleteAll(array('employer_id' => $employer_id));
+                    for ($i = 0; $i < count($data_employers_jobs); $i++)
+                    {
+                        if($data_employers_jobs[$i] != '')
+                        {
+                            $this->Employer->EmployerJob->set('employer_id', $employer_id);
+                            $this->Employer->EmployerJob->set('job_id', $data_employers_jobs[$i]);
+                            $this->Employer->EmployerJob->saveAll();
+                        }
+                    }
+                }
+            }
 
 
         }
+
+    }
+    function change_logo()
+    {
+        $this->is_login_employer();
+        $this->layout = 'employer_default';
+        $employer_id = $this->Session->read('S_Employer.id');
+        $this->Employer->recursive = -1;
+        $employers = $this->Employer->find('first', array(
+            'fields' => array(
+                'Employer.logo',
+                'Employer.website',
+                'Employer.video',
+            ),
+            'conditions' => array(
+                'Employer.id' => $employer_id
+            )
+        ));
+        $this->set(array(
+            'title' => 'Thay đổi logo công ty',
+            'employers' => $employers
+        ));
+
+        //Pots
+        if($this->request->is('post'))
+        {
+            $file = time() . '.jpg';
+            $file_path = $this->path_company_logo . '/' . $file;
+            $imgData = $this->request->data['Employer']['logo'];
+            if($imgData != '')
+            {
+                try
+                {
+                    $this->Library->base64_to_jpeg($imgData, $file_path);
+                    $this->Employer->set('id', $employer_id);
+                    $this->Employer->set('website', $this->request->data['Employer']['website']);
+                    $this->Employer->set('website', $this->request->data['Employer']['website']);
+                    $this->Employer->set('video', $this->request->data['Employer']['video']);
+                    $this->Employer->set('logo', $file);
+                    $this->Employer->save();
+                    if($employers['Employer']['logo'] != 'employer_default.jpg' && $employers['Employer']['logo'] != ''
+                    && file_exists(WWW_ROOT . '/uploads/company/' . $employers['Employer']['logo']))
+                    {
+                        unlink($this->path_company_logo . '/' . $employers['Employer']['logo']);
+                    }
+                    $this->redirect('/nha-tuyen-dung/thay-doi-logo');
+                }
+                catch (Exception $exception)
+                {
+
+                }
+
+
+            }
+
+        }
+
 
     }
     function index()
     {
         $this->layout = 'employer_default';
         $this->is_login_employer();
+        $employer_id = $this->Session->read('S_Employer.id');
         //Count Recruitment
         $this->Employer->Recruitment->recursive = -1;
         $this->Employer->Recruitment->find();
-
-        //Count candidate
-
+        //Count recruitment
+        $count_recruitment = $this->Employer->Recruitment->find('count', array(
+            'conditions' => array(
+                'employer_id' => $employer_id
+            )
+        ));
+        debug($count_recruitment);
 
         //Count resume saved
 
@@ -285,11 +478,6 @@ class EmployersController extends AppController
         $this->set(array(
             'title' => 'Trang quản trị nhà tuyển dụng'
         ));
-    }
-    function manager()
-    {
-        $this->is_login_employer();
-        $this->layout = 'employer_default';
     }
     function job()
     {
@@ -710,7 +898,7 @@ class EmployersController extends AppController
             'conditions' => array(
 
             ),
-            'limit' => 5,
+            'limit' => 10,
             'paramType' => 'querystring',
             'order' => array(
                 'Employer.id' => 'DESC'

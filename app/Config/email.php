@@ -53,7 +53,7 @@ class EmailConfig {
 		'port' => 465,
 		'timeout' => 30,
 		'username' => 'haidangdhct24@gmail.com ',
-		'password' => 'jL12uGrG',
+		'password' => '24091992',
 		'client' => null,
 		'log' => false,
 		'charset' => 'utf-8',

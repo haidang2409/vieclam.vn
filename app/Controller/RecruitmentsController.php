@@ -1131,16 +1131,29 @@ class RecruitmentsController extends AppController
             $conditions = array(
                 'Recruitment.status' => 1,
                 'Recruitment.is_paid' => 0,
+                'Recruitment.deleted' => 0
             );
         }
-        if($status == 'expried')
+        if($status == 'visible')
         {
             $conditions = array(
                 'Recruitment.status' => 1,
                 'Recruitment.is_paid' => 1,
                 'Order.deleted' => 0,
                 'Order.status' => 1,
-                'Order.expiry < ' => $cur_date
+                'Order.expiry >= ' => $cur_date,
+                'Recruitment.deleted' => 0
+            );
+        }
+        if($status == 'expired')
+        {
+            $conditions = array(
+                'Recruitment.status' => 1,
+                'Recruitment.is_paid' => 1,
+                'Order.deleted' => 0,
+                'Order.status' => 1,
+                'Order.expiry < ' => $cur_date,
+                'Recruitment.deleted' => 0
             );
         }
         if($status == 'hidden')
@@ -1151,9 +1164,19 @@ class RecruitmentsController extends AppController
                 'Order.deleted' => 0,
                 'Order.status' => 1,
                 'Order.expiry >= ' => $cur_date,
+                'Recruitment.deleted' => 0
             );
         }
-
+        if($status == 'deleted')
+        {
+            $conditions = array(
+                'Recruitment.status' => 0,
+                'Recruitment.is_paid' => 1,
+                'Order.deleted' => 1,
+                'Order.status' => 1,
+                'Recruitment.deleted' => 1
+            );
+        }
         $jobs = null;
         $this->Recruitment->recursive = -1;
         $this->paginate = array(
@@ -1241,4 +1264,219 @@ class RecruitmentsController extends AppController
             echo '';
         }
     }
+    function admin_edit($recruitment_id = '')
+    {
+        if(!$this->Session->check('Admin'))
+        {
+            $this->redirect('/admin/login');
+        }
+        /////////////////////////
+        $this->Recruitment->recursive = -1;
+        $recruitments = $this->Recruitment->find('first', array(
+            'joins' => array(
+                array(
+                    'table' => 'levels',
+                    'alias' => 'Level',
+                    'type' => 'INNER',
+                    'foreignKey' => false,
+                    'conditions' => 'Recruitment.level_id = Level.id'
+                ),
+                array(
+                    'table' => 'recruitments_languages',
+                    'alias' => 'RecruitmentLanguage',
+                    'type' => 'INNER',
+                    'foreignKey' => false,
+                    'conditions' => 'Recruitment.recruitment_language_id = RecruitmentLanguage.id'
+                ),
+            ),
+            'fields' => array(
+                'Recruitment.id',
+                'Recruitment.level_id',
+                'Recruitment.recruitment_language_id',
+                'Recruitment.title',
+                'Recruitment.description',
+                'Recruitment.require',
+                'Recruitment.salary_min',
+                'Recruitment.salary_max',
+                'Recruitment.hide_salary',
+                'Recruitment.fullname',
+                'Recruitment.phone',
+                'Recruitment.email',
+                'Recruitment.keywords',
+            ),
+            'conditions' => array(
+                'Recruitment.id' => $recruitment_id,
+            )
+
+        ));
+        if($recruitments)
+        {
+            //Lấy ngành của tin tuyển dụng
+            $recruitments_jobs_selected = null;
+            $this->Recruitment->RecruitmentJob->recrusive = -1;
+            $recruitments_jobs = $this->Recruitment->RecruitmentJob->find('all', array(
+                'conditions' => array(
+                    'RecruitmentJob.recruitment_id' => $recruitment_id
+                ),
+                'fields' => array(
+                    'RecruitmentJob.job_id'
+                )
+            ));
+            if($recruitments_jobs)
+            {
+                $i = 0;
+                foreach ($recruitments_jobs as $item)
+                {
+                    $recruitments_jobs_selected[$i] = $item['RecruitmentJob']['job_id'];
+                    $i = $i + 1;
+                }
+            }
+            //Lấy nơi làm việc của tin tuyển dụng
+            $recruitments_provinces_selected = null;
+            $this->Recruitment->RecruitmentProvince->recursive = -1;
+            $recruitments_provinces = $this->Recruitment->RecruitmentProvince->find('all', array(
+                'conditions' => array(
+                    'RecruitmentProvince.recruitment_id' => $recruitment_id
+                ),
+                'fields' => array(
+                    'RecruitmentProvince.province_id'
+                )
+            ));
+            if($recruitments_provinces)
+            {
+                $j = 0;
+                foreach ($recruitments_provinces as $item)
+                {
+                    $recruitments_provinces_selected[$j] = $item['RecruitmentProvince']['province_id'];
+                    $j = $j + 1;
+                }
+            }
+        }
+        else
+        {
+            $this->redirect('/nha-tuyen-dung/viec-lam');
+        }
+        //Set
+        //Level
+        $levels = null;
+        $this->Recruitment->Level->recursive = -1;
+        $level = $this->Recruitment->Level->find('all');
+        if($level)
+        {
+            foreach ($level as $item)
+            {
+                $levels[$item['Level']['id']] = $item['Level']['levelname'];
+            }
+        }
+        //Job
+        $Job = new JobsController();
+        $jobs = $Job->_get_jobs_option();
+        //Province
+        $Province = new ProvincesController();
+        $provinces = $Province->_get_province_option();
+        //Ngôn ngữ hồ sơ
+        $RecruitmentLanguage = new RecruitmentsLanguagesController();
+        $recruitments_languages = $RecruitmentLanguage->_get_recruitment_language();
+        //////////
+
+        //Thông tin công ty
+        $employers = null;
+        $employer_id = $this->Session->read('S_Employer.id');
+        $this->Recruitment->Employer->recursive = -1;
+        $employers = $this->Recruitment->Employer->find('first', array(
+            'joins' => array(
+                array(
+                    'table' => 'scales',
+                    'alias' => 'Scale',
+                    'type' => 'LEFT',
+                    'foreignKey' => false,
+                    'conditions' => 'Employer.scale_id = Scale.id'
+                ),
+            ),
+            'fields' => array(
+                'Employer.id', 'Employer.company_name', 'Employer.email', 'Employer.address', 'Employer.phone',
+                'Employer.fullname', 'Employer.description', 'Employer.logo', 'Employer.website', 'Employer.video',
+                'Scale.id',
+            ),
+            'conditions' => array(
+                'Employer.is_active_email' => 1,
+                'Employer.id' => $employer_id
+            )
+        ));
+        $this->set(array(
+            'recruitments' => $recruitments,
+            'recruitments_jobs_selected' => $recruitments_jobs_selected,
+            'recruitments_provinces_selected' => $recruitments_provinces_selected,
+            'title' => 'Sửa việc làm',
+            'employers' => $employers,
+            'provinces' => $provinces,
+            'levels' => $levels,
+            'jobs' => $jobs,
+            'recruitments_languages' => $recruitments_languages,
+        ));
+        /////////////////////////
+        //Post
+        if($this->request->is('post'))
+        {
+            //
+            $recruitments_jobs = $this->request->data['Recruitment']['recruitments_jobs'];
+            $recruitments_provinces = $this->request->data['Recruitment']['recruitments_provinces'];
+            $sum_recruitments_jobs = count($recruitments_jobs);
+            $sum_recruitments_provinces = count($recruitments_provinces);
+            if($sum_recruitments_jobs == 0)
+            {
+                $this->Session->setFlash('Vui lòng chọn ngành nghề', 'flashWarning');
+                return false;
+            }
+            if($sum_recruitments_jobs > 3)
+            {
+                $this->Session->setFlash('Vui lòng chọn không quá 3 ngành nghề', 'flashWarning');
+                return false;
+            }
+            if($sum_recruitments_provinces == 0)
+            {
+                $this->Session->setFlash('Vui lòng chọn nơi làm việc', 'flashWarning');
+                return false;
+            }
+            if($sum_recruitments_provinces > 3)
+            {
+                $this->Session->setFlash('Vui lòng chọn không quá 3 nơi làm việc', 'flashWarning');
+                return false;
+            }
+            $this->Recruitment->set('id', $recruitment_id);
+            $this->Recruitment->set('link', $this->Library->make_link($this->request->data['Recruitment']['title']));
+
+            if($this->Recruitment->save($this->request->data, true, array('title', 'link', 'salary_min', 'salary_max', 'level_id', 'hide_salary', 'description', 'require', 'recruitment_language_id', 'fullname', 'email')))
+            {
+                $this->Recruitment->RecruitmentJob->deleteAll(array('recruitment_id' => $recruitment_id));
+                //Save lại ngành nghề
+                for($i = 0; $i < $sum_recruitments_jobs; $i++)
+                {
+                    $data_recruitments_jobs = array(
+                        'recruitment_id' => $recruitment_id,
+                        'job_id' => $recruitments_jobs[$i]
+                    );
+                    $this->Recruitment->RecruitmentJob->saveAll($data_recruitments_jobs);
+                }
+                //Save nơi làm việc
+                $this->Recruitment->RecruitmentProvince->deleteAll(array('recruitment_id' => $recruitment_id));
+                for($j = 0; $j < $sum_recruitments_provinces; $j++)
+                {
+                    $data_recruitments_provinces = array(
+                        'recruitment_id' => $recruitment_id,
+                        'province_id' => $recruitments_provinces[$j]
+                    );
+                    $this->Recruitment->RecruitmentProvince->saveAll($data_recruitments_provinces);
+                }
+                //Save thông tin công ty
+                $this->Recruitment->Employer->set('id', $employer_id);
+                $this->Recruitment->Employer->save($this->request->data, true, array('company_name', 'address', 'description'));
+                $this->redirect('/admin/recruitments');
+//                $this->redirect($this->_base_url_employer . '/packets/paid/' . $recruitment_id);
+
+            }
+        }
+
+    }
+
 }

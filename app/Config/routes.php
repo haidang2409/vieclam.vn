@@ -199,6 +199,10 @@ Router::connect($_base_url_employer . '/in-ho-so/:member_id',
         'member_id' => '[0-9]+'
     )
 );
+Router::connect($_base_url_employer . '/thay-doi-logo', array('controller' => 'employers', 'action' => 'change_logo'));
+Router::connect($_base_url_employer . '/quen-mat-khau', array('controller' => 'employers', 'action' => 'forget_password'));
+Router::connect($_base_url_employer . '/dat-lai-mat-khau', array('controller' => 'employers', 'action' => 'reset_password'));
+Router::connect($_base_url_employer . '/change_password_status', array('controller' => 'employers', 'action' => 'change_password_status'));
 /**
  * Load all plugin routes. See the CakePlugin documentation on
  * how to customize the loading of plugin routes.

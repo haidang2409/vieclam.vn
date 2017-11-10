@@ -28,8 +28,10 @@ include('_header.ctp');
 
                 <div class="separator">
                     <p class="change_link">
-                        Chưa có tài khoản?
+                        Hoặc
                         <a href="<?php echo $_base_url_employer?>/dang-ky">Đăng ký</a>
+                        | &nbsp;
+                        <a href="<?php echo $_base_url_employer?>/quen-mat-khau">Quên mật khẩu</a>
                     </p>
                     <div class="clearfix"></div>
                     <br />

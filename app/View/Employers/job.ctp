@@ -19,8 +19,8 @@
                         Hết hạn
                     </a>
                 </div>
-                <div class="col-sm-4">
-
+                <div class="col-sm-4 text-right bigger-130">
+                    <?php echo number_format($this->Paginator->param('count'), 0, '', '.');?> việc làm
                 </div>
             </div>
             <div class="row">

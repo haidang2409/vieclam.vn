@@ -878,7 +878,7 @@ class MembersController extends AppController
                     $desire_job = $data['desire_job'];
                     $desire_province = $data['desire_province'];
                     $desire_level = $data['desire_level'];
-                    $desire_salary = $data['desire_salary'];
+                    $desire_salary = str_replace(',', '', $data['desire_salary']);
                     $desire_benefit = isset($data['desire_benefit'])? $data['desire_benefit']: null;
                     $count_desire_job = count($desire_job);
                     $count_desire_province = count($desire_province);
@@ -2250,7 +2250,7 @@ class MembersController extends AppController
             $condition_level = 'Desire.level_id = ' . $s_level;
         }
         //title
-        $s_title = isset($url['title'])? $url['title']: '';
+        $s_title = isset($url['s_title'])? $url['s_title']: '';
         $condition_title = '';
         if($s_title != '')
         {
@@ -2373,14 +2373,13 @@ class MembersController extends AppController
                 'Member.count_download',
                 'Member.view',
                 'Member.lastlogin',
-
                 'Desire.salary',
                 'Desire.id'
             ),
             'conditions' => array(
                 //Điều kiện mặc định
                 'Member.allow_search' => 1,
-
+                'Member.title !=' => '',
                 //Điều kiện tìm kiếm
                 $condition_arr_member,
                 $condition_level,

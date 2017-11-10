@@ -112,5 +112,52 @@ class MembersEmployersController extends AppController
             echo json_encode(array('status' => 'not_login'));
         }
     }
+    //
+    function resume_saved_ajax()
+    {
+        $this->autoRender = false;
+        if($this->Session->check('S_Employer'))
+        {
+            if($this->request->is('post'))
+            {
+                $employer_id = $this->Session->read('S_Employer.id');
+                $arr_member_id = $this->request->data['member_id'];
+                $this->MemberEmployer->recursive = -1;
+                $members = $this->MemberEmployer->find('all', array(
+                    'fields' => array(
+                        'MemberEmployer.member_id',
+                        'MemberEmployer.is_saved'
+                    ),
+                    'conditions' => array(
+                        'MemberEmployer.employer_id' => $employer_id,
+                        'MemberEmployer.member_id' => $arr_member_id
+                    )
+                ));
+                if($members)
+                {
+                    $data = array();
+                    $i = 0;
+                    foreach ($members as $item)
+                    {
+                        $data[$i] = array(
+                            'member_id' => $item['MemberEmployer']['member_id'],
+                            'is_saved' => $item['MemberEmployer']['is_saved']
+                        );
+                        $i = $i + 1;
+                    }
+                    echo json_encode($data);
+                }
+                else
+                {
+                    echo json_encode(null);
+                }
+            }
+        }
+        else
+        {
+            echo json_encode(null);
+        }
+    }
+
     //Admin
 }

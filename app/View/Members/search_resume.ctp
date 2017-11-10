@@ -44,7 +44,7 @@
                             <span class="input-group-addon">
                                 <i class="ace-icon fa fa-dollar"></i>
                             </span>
-                                <input type="text" name="s_title" id="s_title" placeholder="Chức danh, vị trí. VD: 'PHP Developer' hoặc 'Giám sát bán hàng'">
+                                <input type="text" name="s_title" id="s_title" placeholder="Chức danh, vị trí. VD: 'PHP Developer' hoặc 'Giám sát bán hàng'" value="<?php echo $s_title;?>">
                             </div>
                         </div>
                     </div>
@@ -129,8 +129,12 @@
                 <?php
                 if(isset($members_resumes) && count($members_resumes) > 0)
                 {
+                    $i = 0;
+                    $arr_member_id = array();
                     foreach ($members_resumes as $item)
                     {
+                        $arr_member_id[$i] = $item['Member']['id'];
+                        $i = $i + 1;
                         ?>
                         <div class="item">
                             <div class="row">
@@ -165,7 +169,7 @@
                                     }
                                     ?>
                                 </div>
-                                <div class="col-sm-2 text-center">
+                                <div class="col-sm-1 text-center">
                                     <?php
                                     if($item['Member']['experience'])
                                     {
@@ -185,6 +189,19 @@
                                     echo  '<i class="fa fa-eye"></i> ' . '<span class="bigger-110">' . $item['Member']['view'] . '</span>';
                                     echo '<br>Cập nhật ' . $this->Lib->convertDateTime_Mysql_to_Date($item['Member']['lastlogin']);
                                     ?>
+                                </div>
+                                <div class="col-sm-2 text-center">
+                                    <?php
+                                    if($item['Member']['f_profile'] != '' && file_exists(WWW_ROOT . '/resume/' . $item['Member']['f_profile']))
+                                    {
+                                        echo '<i class="fa fa-paperclip bigger-130"></i><br>Có CV đính kèm';
+                                    }
+                                    ?>
+                                </div>
+                                <div class="col-sm-2 text-center">
+                                    <em id="label-<?php echo $item['Member']['id'];?>">
+
+                                    </em>
                                 </div>
                             </div>
                         </div>
@@ -206,6 +223,33 @@
 </div>
 <script>
     $(function () {
+        $('[data-rel=tooltip]').tooltip();
+        var member_id = [<?php echo implode($arr_member_id, ',');?>];
+        $.ajax({
+            url: '/members_employers/resume_saved_ajax',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                member_id: member_id
+            },
+            success: function (data) {
+                if(data != null && data.length > 0)
+                {
+                    var length = data.length;
+                    for(var i = 0; i < length; i++)
+                    {
+                        if(data[i].is_saved == true)
+                        {
+                            $('#label-' + data[i].member_id).html('<span class="green">Đã lưu hồ sơ</span>');
+                        }
+                        else
+                        {
+                            $('#label-' + data[i].member_id).html('<span class="orange2">Đã xem</span>');
+                        }
+                    }
+                }
+            }
+        });
         $('#s_jobs').select2({
             placeholder: 'Ngành nghề'
         });
