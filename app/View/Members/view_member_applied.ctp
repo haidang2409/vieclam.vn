@@ -76,7 +76,7 @@ include ('resume.ctp');
                     success: function (data) {
                         if(data.status == 'success')
                         {
-                            alert_full('success', 'Đã cập nhật trạng thái hồ sơ');
+                            alert_full('success', 'Đã lưu hồ sơ');
                             $('.btn-save-resume').html('<i class="fa fa-save"> </i> Đã lưu');
                             $('.btn-save-resume').removeClass('btn-yellow');
                             $('.btn-save-resume').addClass('btn-success');

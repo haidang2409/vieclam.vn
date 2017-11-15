@@ -183,6 +183,14 @@ select.select-100
 {
     background-color: transparent !important;
 }
+.header-index
+{
+    padding: 20px 0;
+}
+.col-sort
+{
+    padding-top: 5px;
+}
 /*End Index page*/
 /*Register*/
 .login_wrapper
@@ -190,6 +198,9 @@ select.select-100
     background-color: #ffffff;
     margin: 20px auto;
     padding: 30px 20px;
+    border-radius: 5px;
+    border: 1px solid #D5D5D5;
+    box-shadow: 2px 2px 2px;
 }
 .login_wrapper .div-img
 {
@@ -201,7 +212,7 @@ select.select-100
 /*Recruitment*/
 .recruitment-list-header, .recruitment-list-footer
 {
-    padding: 15px;
+    padding: 10px 15px;
 }
 .background-primary
 {

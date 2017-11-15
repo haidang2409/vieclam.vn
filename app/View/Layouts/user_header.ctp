@@ -14,15 +14,6 @@
     echo $this->Html->meta('keywords', isset($keywords)? $keywords: $default_keywords);
     echo $this->Html->meta('description', isset($head_description)? $head_description: $default_description);
     echo $this->Html->meta('icon');
-//    echo $this->Html->css('bootstrap');
-//    echo $this->Html->css('font-awesome.min');
-//    echo $this->Html->css('font_custom');
-//    echo $this->Html->css('bootstrap-custom');
-//    echo $this->Html->css('select2.min');
-//    echo $this->Html->css('colorbox.min');
-//    echo $this->Html->css('ace.min');
-//    echo $this->Html->css('jquery-ui.min');
-//    echo $this->Html->css('MonthPicker');
     echo $this->Html->css('app_common');
     echo $this->Html->css('style');
     echo $this->Html->css('home_style');

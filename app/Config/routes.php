@@ -41,7 +41,7 @@ Router::connect('/dang-ky', array('controller' => 'members', 'action' => 'regist
 Router::connect('/dang-nhap', array('controller' => 'members', 'action' => 'login'));
 Router::connect('/dang-xuat', array('controller' => 'members', 'action' => 'logout'));
 Router::connect('/active_email', array('controller' => 'members', 'action' => 'active_email'));
-
+Router::connect('/quen-mat-khau', array('controller' => 'members', 'action' => 'forget_password'));
 Router::connect('/tim-viec-lam', array('controller' => 'recruitments', 'action' => 'index_recruitment'));
 
 
@@ -203,6 +203,10 @@ Router::connect($_base_url_employer . '/thay-doi-logo', array('controller' => 'e
 Router::connect($_base_url_employer . '/quen-mat-khau', array('controller' => 'employers', 'action' => 'forget_password'));
 Router::connect($_base_url_employer . '/dat-lai-mat-khau', array('controller' => 'employers', 'action' => 'reset_password'));
 Router::connect($_base_url_employer . '/change_password_status', array('controller' => 'employers', 'action' => 'change_password_status'));
+Router::connect($_base_url_employer . '/doi-email', array('controller' => 'employers', 'action' => 'change_email'));
+Router::connect($_base_url_employer . '/doi-mat-khau', array('controller' => 'employers', 'action' => 'change_password'));
+Router::connect($_base_url_employer . '/hoa-don', array('controller' => 'orders', 'action' => 'index'));
+Router::connect($_base_url_employer . '/phuc-loi-cong-ty', array('controller' => 'employers_benefits', 'action' => 'update_benefit'));
 /**
  * Load all plugin routes. See the CakePlugin documentation on
  * how to customize the loading of plugin routes.

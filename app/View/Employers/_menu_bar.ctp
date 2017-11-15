@@ -4,6 +4,9 @@
             <a href="/nha-tuyen-dung/tai-khoan">Thông tin công ty</a>
         </li>
         <li>
+            <a href="/nha-tuyen-dung/phuc-loi-cong-ty">Phúc lợi công ty</a>
+        </li>
+        <li>
             <a href="/nha-tuyen-dung/thay-doi-logo">Thay đổi logo</a>
         </li>
         <li>

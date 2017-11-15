@@ -37,8 +37,10 @@
 
                         <div class="separator text-center">
                             <p class="change_link">
-                                Chưa có tài khoản?
+                                Hoặc
                                 <a href="/dang-ky"><?php echo __('Register');?></a>
+                                |
+                                <a href="/quen-mat-khau">Quên mật khẩu</a>
                             </p>
                             <div class="clearfix"></div>
                         </div>

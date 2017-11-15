@@ -215,6 +215,17 @@
                                 ?>
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                Tin đã đăng
+                            </td>
+                            <td>
+                                <a href="/admin/recruitments?employerId=<?php echo $employers['Employer']['id'];?>">
+                                    <?php echo $count_recruitment;?>
+                                    việc <làm></làm>
+                                </a>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div><!-- /.row -->

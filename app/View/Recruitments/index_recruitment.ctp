@@ -69,15 +69,8 @@ if(isset($arr_recruitments_saved) && count($arr_recruitments_saved) > 0)
                 </div>
             </div>
             <div class="col-sm-12 text-center hidden-xs" style="margin-bottom: 10px">
-                <div class="text-center text-danger" style="background-color: #fff; height: 150px">
-                    <h3>
-                        <br>
-                        LIÊN HỆ ĐẶT QUẢNG CÁO
-                        <br>
-                        <br>
-                        haidangdhct24@gmail.com
-                    </h3>
-
+                <div class="text-center text-danger">
+                    <img src="https://mediaz.vn/wp-content/uploads/2014/09/Banner-01-1170x227.png">
                 </div>
             </div>
         </div>
@@ -86,11 +79,11 @@ if(isset($arr_recruitments_saved) && count($arr_recruitments_saved) > 0)
                 <div class="background-white">
                     <div class="recruitment-list-header">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 col-sort">
                                 Sắp xếp:
-                                <a href="javascrip: void(0)">Mặc định </a> |
-                                <a href="javascrip: void(0)">Mới nhất </a> |
-                                <a href="javascrip: void(0)">Lương </a>
+                                <?php echo $this->Paginator->sort('Order.packet_id', 'Mặc định', array('direction' => 'desc'));?> |
+                                <?php echo $this->Paginator->sort('Order.created', 'Mới nhất', array('direction' => 'desc'));?> |
+                                <?php echo $this->Paginator->sort('Recruitment.salary_min', 'Lương');?>
                             </div>
                             <div class="col-sm-6 text-right bigger-150">
                                 <?php echo number_format($this->Paginator->param('count'), 0, '', '.');?> việc làm
@@ -363,7 +356,6 @@ if(isset($arr_recruitments_saved) && count($arr_recruitments_saved) > 0)
 //            placeholder: 'Tất cả địa điểm'
         });
         $('.div-search-second').show();
-
         //
         var href = window.location.pathname;
         //Click button

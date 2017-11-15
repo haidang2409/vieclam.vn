@@ -218,6 +218,39 @@
                 }
                 ?>
             </div>
+            <div class="text-center" style="padding-top: 15px">
+                <?php if($this->params['paging']['Member']['pageCount'] > 1):?>
+                    <div class="pagination">
+                        <ul class="pagination">
+                            <?php
+                            //
+                            $here = $this->here;
+                            $len_here = strlen($here);
+                            $here = substr($here, 1, $len_here);
+                            $this->Paginator->options(array(
+                                'url'=> array(
+                                    'controller' => '/',
+                                    'action' => '/',
+                                    $here
+                                )
+                            ));
+                            //set querystring
+                            $this->Paginator->options['url']['?'] = $this->params['url'];
+                            echo urldecode($this->Paginator->numbers(
+                                array(
+                                    'separator' => '',
+                                    'currentTag' => 'a',
+                                    'currentClass' => 'active',
+                                    'ellipsis'=>'<a>...</a>',
+                                    'modulus' => 4,
+                                    'first' => 2,
+                                    'last' => 2
+                                )));
+                            ?>
+                        </ul>
+                    </div>
+                <?php endif;?>
+            </div>
         </div>
     </div>
 </div>

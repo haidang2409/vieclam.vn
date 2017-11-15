@@ -417,7 +417,7 @@
                                 if(isset($desires) && count($desires) > 0)
                                 {
                                     $desire_level_id = $desires['Desire']['level_id'];
-                                    $desire_salary = $desires['Desire']['salary'];
+                                    $desire_salary = $desires['Desire']['salary'] != ''? number_format($desires['Desire']['salary'], 0, '', ','): '';
                                     ?>
                                     <div class="row">
                                         <div class="col-sm-6 job">
@@ -1425,7 +1425,7 @@
                                 </label>
                                 <div>
                                     <?php
-                                    echo $this->Form->input('desire_salary', array('id' => 'desire_salary', 'type' => 'text', 'label' => false, 'class' => 'form-control', 'value' => number_format($desire_salary, 0, '', ',')));
+                                    echo $this->Form->input('desire_salary', array('id' => 'desire_salary', 'type' => 'text', 'label' => false, 'class' => 'form-control', 'value' => $desire_salary));
                                     ?>
                                     <span hidden="hidden" class="error-label error-desire_salary">Nhập mức lương mong muốn</span>
                                 </div>

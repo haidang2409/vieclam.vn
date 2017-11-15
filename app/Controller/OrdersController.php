@@ -1,10 +1,65 @@
 <?php
 class OrdersController extends AppController
 {
+    //Employer
     ////////////////////////////////////
-    ////////////////////////////////////
+    function index()
+    {
+        $this->is_login_employer();
+        $this->layout = 'employer_default';
+        $employer_id = $this->Session->read('S_Employer.id');
+        $orders = array();
+        $this->Order->recursive = -1;
+        $this->paginate = array(
+            'joins' => array(
+                array(
+                    'table' => 'recruitments',
+                    'alias' => 'Recruitment',
+                    'type' => 'INNER',
+                    'foreignKey' => false,
+                    'conditions' => 'Order.recruitment_id = Recruitment.id'
+                ),
+                array(
+                    'table' => 'packets',
+                    'alias' => 'Packet',
+                    'type' => 'INNER',
+                    'foreignKey' => false,
+                    'conditions' => 'Order.packet_id = Packet.id'
+                ),
+            ),
+            'limit' => 10,
+            'order' => array('Order.id' => 'DESC'),
+            'fields' => array(
+                'Recruitment.id',
+                'Recruitment.title',
+                'Order.created',
+                'Order.expiry',
+                'Order.id',
+                'Order.sumamount',
+                'Order.discount',
+                'Order.status',
+                'Packet.packet_name'
+            ),
+            'paramType' => 'querystring',
+            'conditions' => array(
+                'Recruitment.employer_id' => $employer_id
+            )
+        );
+        try
+        {
+            $orders = $this->paginate('Order');
+        }
+        catch (Exception $exception)
+        {
+
+        }
+        $this->set(array(
+            'orders' => $orders,
+            'title' => 'Lịch sử hóa đơn'
+        ));
+    }
+
     //Admin
-    ////////////////////////////////////
     ////////////////////////////////////
     function admin_index()
     {
@@ -88,6 +143,7 @@ class OrdersController extends AppController
                 'Employer.id',
                 'Employer.company_name',
                 'Order.created',
+                'Order.expiry',
                 'Order.id',
                 'Order.sumamount',
                 'Order.discount',

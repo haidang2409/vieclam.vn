@@ -41,7 +41,7 @@ include ('analyticstracking.ctp');
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/" style="padding-top: 3px; padding-bottom: 3px">
+            <a class="navbar-brand" href="/nha-tuyen-dung" style="padding-top: 3px; padding-bottom: 3px">
                 <img src="/img/logo_primary_xs.png" height="44px">
             </a>
         </div>
@@ -61,15 +61,35 @@ include ('analyticstracking.ctp');
 <!--                </li>-->
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-list-alt"></span>
+                        <span class="fa fa-list"></span>
                         Hồ sơ <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu navbar-left-has-direction">
-                        <li><a href="<?php echo $_base_url_employer;?>/ho-so-ung-vien">Hồ sơ dự tuyển</a></li>
-                        <li><a href="<?php echo $_base_url_employer;?>/ho-so-da-luu">Hồ sơ đã lưu</a></li>
+                        <li>
+                            <a href="<?php echo $_base_url_employer;?>/ho-so-ung-vien">
+                                <i class="fa fa-user"></i>
+                                Hồ sơ dự tuyển
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo $_base_url_employer;?>/ho-so-da-luu">
+                                <i class="fa fa-save"></i>
+                                Hồ sơ đã lưu
+                            </a>
+                        </li>
                         <li class="divider"></li>
-                        <li><a href="<?php echo $_base_url_employer;?>/tim-ung-vien">Tìm ứng viên</a></li>
+                        <li>
+                            <a href="<?php echo $_base_url_employer;?>/tim-ung-vien">
+                                <i class="fa fa-search"></i>
+                                Tìm ứng viên
+                            </a>
+                        </li>
                     </ul>
+                </li>
+                <li>
+                    <a href="<?php echo $_base_url_employer;?>/hoa-don">
+                        Hóa đơn
+                    </a>
                 </li>
                 <li>
                     <a style="font-weight: bold" href="<?php echo $_base_url_employer;?>/dang-viec-lam">
@@ -136,7 +156,7 @@ include ('analyticstracking.ctp');
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-user">
+                        <span class="fa fa-user">
 
                         </span>
                         Tài khoản <b class="caret"></b>
@@ -147,20 +167,26 @@ include ('analyticstracking.ctp');
                         ?>
                         <ul class="dropdown-menu navbar-right-has-direction">
                             <li><a href="<?php echo $_base_url_employer;?>/tai-khoan">
-                                    <span class="glyphicon glyphicon-user"> </span>
+                                    <span class="fa fa-user"> </span>
                                     Tài khoản
                                 </a>
                             </li>
                             <li>
                                 <a href="<?php echo $_base_url_employer;?>/thiet-lap">
-                                    <span class="glyphicon glyphicon-cog"> </span>
+                                    <span class="fa fa-cog"> </span>
                                     Thiết lập
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?php echo $_base_url_employer;?>/doi-mat-khau">
+                                    <span class="fa fa-key"> </span>
+                                    Đổi mật khẩu
                                 </a>
                             </li>
                             <li class="divider"></li>
                             <li>
                                 <a href="<?php echo $_base_url_employer;?>/dang-xuat">
-                                    <span class="glyphicon glyphicon-off"></span>
+                                    <span class="fa fa-power-off"></span>
                                     Đăng xuất
                                 </a>
                             </li>

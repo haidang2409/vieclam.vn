@@ -145,7 +145,7 @@ class EmployersController extends AppController
         $this->Session->delete('S_Employer');
         $this->redirect($this->_base_url_employer);
     }
-    public function forget_password()
+    function forget_password()
     {
         //
         $this->layout = 'ajax';
@@ -189,7 +189,7 @@ class EmployersController extends AppController
             }
         }
     }
-    public function reset_password()
+    function reset_password()
     {
         $this->layout = 'ajax';
         $code = isset($this->params['url']['code'])? $this->params['url']['code']: '';
@@ -461,6 +461,19 @@ class EmployersController extends AppController
         $this->layout = 'employer_default';
         $this->is_login_employer();
         $employer_id = $this->Session->read('S_Employer.id');
+        //
+        $this->Employer->recursive = -1;
+        $employers = $this->Employer->find('first', array(
+            'fields' => array(
+                'Employer.company_name',
+                'Employer.email',
+                'Employer.logo',
+            ),
+            'conditions' => array(
+                'Employer.id' => $employer_id
+            )
+        ));
+
         //Count Recruitment
         $this->Employer->Recruitment->recursive = -1;
         $this->Employer->Recruitment->find();
@@ -470,13 +483,59 @@ class EmployersController extends AppController
                 'employer_id' => $employer_id
             )
         ));
-        debug($count_recruitment);
-
         //Count resume saved
 
-
+        //Count candidate
+        ClassRegistry::init('MemberRecruitment')->recursive = -1;
+        $count_candidate = ClassRegistry::init('MemberRecruitment')->find('count', array(
+            'joins' => array(
+                array(
+                    'table' => 'recruitments',
+                    'alias' => 'Recruitment',
+                    'type' => 'INNER',
+                    'foreignKey' => false,
+                    'conditions' => 'MemberRecruitment.recruitment_id = Recruitment.id'
+                )
+            ),
+            'fields' => array('MemberRecruitment.id'),
+            'conditions' => array(
+                'MemberRecruitment.is_applied' => 1,
+                'Recruitment.employer_id' => $employer_id
+            )
+        ));
+        //Count all resume
+        ClassRegistry::init('Member')->recursive = -1;
+        $count_resume = ClassRegistry::init('Member')->find('count', array(
+            'joins' => array(
+                array(
+                    'table' => 'desires',
+                    'alias' => 'Desire',
+                    'type' => 'INNER',
+                    'foreignKey' => false,
+                    'conditions' => 'Member.id = Desire.member_id'
+                )
+            ),
+            'fields' => array('Member.id'),
+            'conditions' => array(
+                'Member.allow_search' => 1
+            )
+        ));
+        //Count resume saved
+        ClassRegistry::init('MemberEmployer')->recursive = -1;
+        $count_resume_saved = ClassRegistry::init('MemberEmployer')->find('count', array(
+            'fields' => array('MemberEmployer.id'),
+            'conditions' => array(
+                'MemberEmployer.employer_id' => $employer_id,
+                'MemberEmployer.is_saved' => 1
+            )
+        ));
         $this->set(array(
-            'title' => 'Trang quản trị nhà tuyển dụng'
+            'title' => 'Trang quản trị nhà tuyển dụng',
+            'employers' => $employers,
+            'count_recruitment' => $count_recruitment,
+            'count_resume' => $count_resume,
+            'count_candidate' => $count_candidate,
+            'count_resume_saved' => $count_resume_saved,
         ));
     }
     function job()
@@ -705,7 +764,7 @@ class EmployersController extends AppController
 
             ),
             'order' => array('MemberRecruitment.date_applied' => 'DESC'),
-            'limit' => 10,
+            'limit' => 2,
             'paramType' => 'querystring'
         );
         try
@@ -856,6 +915,72 @@ class EmployersController extends AppController
         ));
 
     }
+    function change_password()
+    {
+        $this->is_login_employer();
+        $this->layout = 'employer_default';
+        $employer_id = $this->Session->read('S_Employer.id');
+        $this->set(array('title' => 'Đổi mật khẩu'));
+        if($this->request->is('post'))
+        {
+            $data = array(
+                'password_old' => $this->request->data['Employer']['password_old'],
+                'password_new' => $this->request->data['Employer']['password_new'],
+                're_password_new' => $this->request->data['Employer']['re_password_new'],
+                'id' => $employer_id,
+                'password' => $this->request->data['Employer']['re_password_new']
+            );
+            if($this->Employer->save($data, array('id', 'password')))
+            {
+                $this->Session->setFlash('Mật khẩu đã được thay đổi', 'flashSuccess');
+//                $this->redirect('//profile');
+            }
+        }
+    }
+    function change_email()
+    {
+        $this->is_login_employer();
+        $this->layout = 'employer_default';
+        $employer_id = $this->Session->read('S_Employer.id');
+
+        $this->set(array(
+            'title' => 'Thay đổi email'
+        ));
+        //
+        if($this->request->is('post'))
+        {
+            $pass = $this->request->data['Employer']['password'];
+            $email = $this->request->data['Employer']['email'];
+            $this->Employer->recursive = -1;
+            $employers = $this->Employer->find('first', array(
+                'fields' => array(
+                    'Employer.id'
+                ),
+                'conditions' => array(
+                    'Employer.id' => $employer_id,
+                    'Employer.password' => AuthComponent::password($pass)
+                )
+            ));
+            if(!$employers)
+            {
+                $this->Session->setFlash('Mật khẩu không đúng');
+            }
+            else
+            {
+                $count_email = $this->Employer->findByEmail($email);
+                if($count_email)
+                {
+                    $this->Session->setFlash('Địa chỉ email đã tồn tại');
+                }
+                else
+                {
+                    //Cập nhật lại email mới
+                    //Set code_active_email mới
+                    //Set lại is_active_email  = 0 và gửi email xác nhận tới địa chỉ mới
+                }
+            }
+        }
+    }
 
     //Admin
     //////////////////////////////
@@ -992,11 +1117,18 @@ class EmployersController extends AppController
                     'EmployerBenefit.employer_id' => $id
                 )
             ));
+            //Count recruitment of this employer
+            $this->Employer->Recruitment->recursive = -1;
+            $count_recruitment = $this->Employer->Recruitment->find('count', array(
+                'fields' => array('Recruitment.id'),
+                'conditions' => array('Recruitment.employer_id' => $id)
+            ));
             $this->set(array(
                 'title' => $employers['Employer']['company_name'],
                 'employers' => $employers,
                 'employers_jobs' => $employers_jobs,
-                'employers_benefits' => $employers_benefits
+                'employers_benefits' => $employers_benefits,
+                'count_recruitment' => $count_recruitment
             ));
         }
         else

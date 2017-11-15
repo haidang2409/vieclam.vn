@@ -43,7 +43,8 @@
                                                     <a href="/nha-tuyen-dung/ho-so-da-luu?folder=<?php echo $item['Folder']['id'];?>">
                                                         <?php
                                                         echo htmlentities($item['Folder']['folder_name'], ENT_QUOTES, 'UTF-8');
-                                                        $folders_options[$item['Folder']['id']] = htmlentities($item['Folder']['folder_name'], ENT_QUOTES, 'UTF-8');
+//                                                        $folders_options[$item['Folder']['id']] = htmlentities($item['Folder']['folder_name'], ENT_QUOTES, 'UTF-8');
+                                                        $folders_options[$item['Folder']['id']] = $item['Folder']['folder_name'];
                                                         ?>
                                                     </a>
                                                 </span>

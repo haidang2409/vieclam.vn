@@ -9,20 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <?php
     $default_keywords = '';
-    $default_description = 'Kênh tìm kiếm việc làm';
+    $default_description = 'Chuyên trang tìm kiếm việc làm, tuyển dụng';
     $default_title = '';
     echo $this->Html->meta('keywords', isset($keywords)? $keywords: $default_keywords);
     echo $this->Html->meta('description', isset($head_description)? $head_description: $default_description);
     echo $this->Html->meta('icon');
-//    echo $this->Html->css('bootstrap');
-//    echo $this->Html->css('font-awesome.min');
-//    echo $this->Html->css('font_custom');
-//    echo $this->Html->css('bootstrap-custom');
-//    echo $this->Html->css('select2.min');
-//    echo $this->Html->css('colorbox.min');
-//    echo $this->Html->css('ace.min');
-//    echo $this->Html->css('jquery-ui.min');
-//    echo $this->Html->css('home_style');
     echo $this->Html->css('app_common');
     echo $this->Html->css('style');
     echo $this->Html->script('jquery-2.1.4.min', array());
@@ -88,7 +79,6 @@ include ('analyticstracking.ctp');
                         ?>
                         <a style="padding-top: 0; padding-bottom: 0" href="#" class="dropdown-toggle dropdown-toggle-profile" data-toggle="dropdown">
                             <img class="img-circle" src="/img/members/<?php echo $img?>" width="50px" height="50px">
-                            <b class="caret visible-xs"></b>
                         </a>
                         <ul class="dropdown-menu navbar-right-has-direction dropdown-profile">
                             <li>

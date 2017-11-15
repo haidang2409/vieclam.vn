@@ -137,18 +137,6 @@ class Employer extends AppModel
             )
         ),
         'phone' => array(
-//            'notBlank' => array(
-//                'rule' => 'notBlank',
-//                'message' => 'Nhập số điện thoại'
-//            ),
-//            'numeric' => array(
-//                'rule' => 'numeric',
-//                'message' => 'Nhập đúng số điện thoại'
-//            ),
-//            'between' => array(
-//                'rule' => array('between', 10, 11),
-//                'message' => 'Nhập đúng số điện thoại'
-//            )
         ),
         //Update
         'address' => array(
@@ -199,6 +187,29 @@ class Employer extends AppModel
             break;
         }
         return $this->data[$this->name][$otherfield] === $this->data[$this->name][$fname];
+    }
+    public function checkpassword($check)
+    {
+        $password = $this->find(
+            'first',
+            array(
+                'fields' => array(
+                    'Employer.id',
+                    'Employer.password'
+                ),
+                'conditions' => array(
+                    'Employer.password' => AuthComponent::password($check['password_old'])
+                )
+            )
+        );
+        if(!empty($password))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     public function beforeSave($options = array()) {
         // hash our password

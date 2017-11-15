@@ -16,9 +16,111 @@ class RecruitmentsController extends AppController
         $Province = new ProvincesController();
         $provinces = $Province->_get_province_option_link();
         //Set
+        $date = getdate();
+        $curr_date = $date['year'] . '-' . $date['mon'] . '-' . $date['mday'];
+        $this->Recruitment->recursive = -1;
+        $recruitments = $this->Recruitment->find('all', array(
+            'joins' => array(
+                array(
+                    'table' => 'employers',
+                    'alias' => 'Employer',
+                    'type' => 'INNER',
+                    'foreignKey' => false,
+                    'conditions' => 'Recruitment.employer_id = Employer.id'
+                ),
+                array(
+                    'table' => 'orders',
+                    'alias' => 'Order',
+                    'type' => 'INNER',
+                    'foreignKey' => false,
+                    'conditions' => 'Recruitment.id = Order.recruitment_id'
+                ),
+                array(
+                    'table' => 'packets',
+                    'alias' => 'Packet',
+                    'type' => 'INNER',
+                    'foreignKey' => false,
+                    'conditions' => 'Order.packet_id = Packet.id'
+                ),
+            ),
+            'fields' => array(
+                'Recruitment.id',
+                'Recruitment.title',
+                'Recruitment.link',
+                'Recruitment.salary_min',
+                'Recruitment.salary_max',
+                'Recruitment.hide_salary',
+                'Employer.id',
+                'Employer.company_name',
+                'Employer.logo',
+                'Order.created',
+                'Packet.id',
+            ),
+            'conditions' => array(
+                //Dieu kien mac dinh
+                'Recruitment.status' => 1,
+                'Recruitment.is_paid' => 1,
+                'Recruitment.deleted' => 0,
+                'Order.status' => 1,
+                'Order.deleted' => 0,
+                'Order.expiry >=' => $curr_date,
+                //Điều kiện tìm kiếm
+            ),
+            'order' => array('Order.packet_id' => 'DESC', 'Order.created' => 'DESC'),
+            'limit' => 10,
+            'paramType' => 'querystring'
+        ));
+        $i = 0;
+        foreach ($recruitments as $item)
+        {
+            $recruitment_id = $item['Recruitment']['id'];
+            $recruitments_provinces = null;
+            ClassRegistry::init('RecruitmentProvince')->recursive = -1;
+            $recruitments_provinces = ClassRegistry::init('RecruitmentProvince')->find('all', array(
+                'joins' => array(
+                    array(
+                        'table' => 'provinces',
+                        'alias' => 'Province',
+                        'foreignKey' => false,
+                        'conditions' => 'RecruitmentProvince.province_id = Province.id'
+                    )
+                ),
+                'fields' => array(
+                    'Province.id',
+                    'Province.provincename'
+                ),
+                'conditions' => array('RecruitmentProvince.recruitment_id' => $recruitment_id)
+            ));
+            $recruitments[$i]['RecruitmentProvince'] = $recruitments_provinces;
+            $i = $i + 1;
+        }
+        //Việc làm đã lưu lấy mảng các recruitment_id đã lưu
+        $arr_recruitments_saved = null;
+        if($this->Session->check('S_Member'))
+        {
+            $member_id = $this->Session->read('S_Member.id');
+            $this->Recruitment->MemberRecruitment->recursive = -1;
+            $recruitments_saved = $this->Recruitment->MemberRecruitment->find('all', array(
+                'fields' => array('recruitment_id'),
+                'conditions' => array('member_id' => $member_id),
+                'order' => array('recruitment_id' => 'ASC')
+            ));
+            if($recruitments_saved)
+            {
+                $i = 0;
+                foreach ($recruitments_saved as $item)
+                {
+                    $arr_recruitments_saved[$i] = $item['MemberRecruitment']['recruitment_id'];
+                    $i = $i + 1;
+                }
+            }
+        }
         $this->set(array(
             'jobs' => $jobs,
-            'provinces' => $provinces
+            'provinces' => $provinces,
+            'recruitments' => $recruitments,
+            'arr_recruitments_saved' => $arr_recruitments_saved,
+
         ));
     }
     function index_recruitment()
@@ -26,6 +128,7 @@ class RecruitmentsController extends AppController
         //Điều kiện
         $url = $this->params['url'];
         //Job và Province
+        $title = 'Chuyên trang tìm kiếm việc làm, tuyển dụng';
         $s_job_id = isset($this->params['job_id'])? substr($this->params['job_id'], 1): '';
         $s_job_link = isset($this->params['job_link'])? $this->params['job_link']: '';
         $s_province_id = isset($this->params['province_id'])? substr($this->params['province_id'], 1): '';
@@ -67,6 +170,19 @@ class RecruitmentsController extends AppController
             {
                 $condition_id_recruitment = 'Recruitment.id IS NULL';
             }
+            //Set title
+            ClassRegistry::init('Job')->recursive = -1;
+            $title_job = ClassRegistry::init('Job')->findById($s_job_id);
+            if($title_job)
+            {
+                $title = 'Việc làm ' . $title_job['Job']['jobname'];
+            }
+            ClassRegistry::init('Province')->recursive = -1;
+            $title_province = ClassRegistry::init('Province')->findById($s_province_id);
+            if($title_province)
+            {
+                $title = $title . ' tại ' . $title_province['Province']['provincename'];
+            }
         }
         else
         {
@@ -93,6 +209,13 @@ class RecruitmentsController extends AppController
                 {
                     $condition_id_recruitment = 'Recruitment.id IS NULL';
                 }
+                //Set title
+                ClassRegistry::init('Job')->recursive = -1;
+                $title_job = ClassRegistry::init('Job')->findById($s_job_id);
+                if($title_job)
+                {
+                    $title = 'Việc làm ' . $title_job['Job']['jobname'];
+                }
             }
             else
             {
@@ -118,6 +241,12 @@ class RecruitmentsController extends AppController
                     else
                     {
                         $condition_id_recruitment = 'Recruitment.id IS NULL';
+                    }
+                    ClassRegistry::init('Province')->recursive = -1;
+                    $title_province = ClassRegistry::init('Province')->findById($s_province_id);
+                    if($title_province)
+                    {
+                        $title = 'Việc làm tại ' . $title_province['Province']['provincename'];
                     }
                 }
             }
@@ -339,6 +468,7 @@ class RecruitmentsController extends AppController
         }
         //Set
         $this->set(array(
+            'title' => $title,
             'company_features' => $company_features,
             'recruitments' => $recruitments,
             'jobs' => $jobs,
@@ -422,6 +552,8 @@ class RecruitmentsController extends AppController
         $save_or_applied_recruitments = null;
         if($recruitments)
         {
+            //Title
+            $key_words = '';
             //Update view
             $this->Recruitment->query('UPDATE recruitments SET view = view + 1 WHERE id = ' . (int)$id);
             //Lưu danh sách đã xem vào session
@@ -490,10 +622,12 @@ class RecruitmentsController extends AppController
             $recruitments['RecruitmentProvince'] = $recruitments_provinces;
             $id_recruitments_province = null;
             $i = 0;
-            //Mảng các province_id của tin hiển thị
+            //Mảng các province_id của tin hiển thị, dùng để lấy recruitment relative
             foreach ($recruitments_provinces as $rp)
             {
                 $id_recruitments_province[$i] = $rp['Province']['id'];
+                //Keywords các tỉnh thành
+                $key_words = $key_words . 'việc làm ' . $rp['Province']['provincename'] . ', ';
                 $i = $i + 1;
             }
             //Jobs
@@ -517,13 +651,14 @@ class RecruitmentsController extends AppController
             $recruitments['RecruitmentJob'] = $recruitments_jobs;
             $id_recruitments_job = null;
             $j = 0;
-            //Mảng các job của tin đang hiển thị
+            //Mảng các job của tin đang hiển thị, dùng để lấy recruitment relative
             foreach ($recruitments_jobs as $rj)
             {
                 $id_recruitments_job[$j] = $rj['Job']['id'];
+                //Keywords các ngành nghề
+                $key_words = $key_words . $rj['Job']['jobname'] . ', ';
                 $j = $j + 1;
             }
-//            debug($recruitments);
 //            /////Tin liên quan
             //Lọc lấy id cùng province và cùng job với tin đang hiển thị
             //Do Quan hệ recruitment->province, và recruitment->job là 1 nhiều nên join lại rồi distinct id recruitment
@@ -603,7 +738,6 @@ class RecruitmentsController extends AppController
                 ),
                 'limit' => 10
             ));
-//            debug($recruitments_relative);
             //End tin liên quan
             $this->set(array(
                 'benefits' => $benefits,
@@ -612,7 +746,7 @@ class RecruitmentsController extends AppController
                 'save_or_applied_recruitments' => $save_or_applied_recruitments,
                 'title' => $recruitments['Recruitment']['title'],
                 'description' => '',
-                'key_words' => ''
+                'keywords' => $key_words
             ));
         }
         else
@@ -745,7 +879,6 @@ class RecruitmentsController extends AppController
             echo json_encode(array('status' => 'not_login'));
         }
     }
-
 
     //Employer
     ////////////////////////
@@ -1217,9 +1350,23 @@ class RecruitmentsController extends AppController
         {
 
         }
+        //
+        $employers_option = array();
+        $this->Recruitment->Employer->recursive = -1;
+        $employers = $this->Recruitment->Employer->find('all', array(
+            'fields' => array('Employer.id', 'Employer.company_name'),
+        ));
+        if($employers)
+        {
+            foreach ($employers as $item)
+            {
+                $employers_option[$item['Employer']['id']] = $item['Employer']['company_name'];
+            }
+        }
         //Set
         $this->set(array(
             'jobs' => $jobs,
+            'employers_option' => $employers_option,
             'title' => 'Danh sách việc làm'
         ));
     }

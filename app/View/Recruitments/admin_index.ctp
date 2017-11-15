@@ -9,14 +9,57 @@
                 <li>Tuyển dụng</li>
             </ul><!-- /.breadcrumb -->
             <div class="nav-search" id="nav-search">
-                <form class="form-search">
-                    <span class="input-icon">
-                        <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-                        <i class="ace-icon fa fa-search nav-search-icon"></i>
-                    </span>
-                </form>
+                <button class="btnOpenSearch" data-show="0">
+                    <i class="fa fa-search"></i>
+                </button>
             </div><!-- /.nav-search -->
         </div>
+
+        <!--        Search-->
+        <div class="div-form-timkiem">
+            <form class="form-horizontal" action="" method="get">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Nhà tuyển dụng</label>
+                    <div class="col-sm-4">
+                        <?php
+                        echo $this->Form->input('employer', array(
+                            'type' => 'select',
+                            'label' => false,
+                            'style' => 'width: 100% !important',
+                            'empty' => 'Tất cả',
+                            'options' => $employers_option,
+                            'default' => '',
+                            'id' => 'employerId',
+                            'name' => 'employerId'
+                        ));
+                        ?>
+                    </div>
+                    <label class="col-sm-2 control-label">Việc làm</label>
+                    <div class="col-sm-4">
+                        <?php
+                        echo $this->Form->input('recruitment', array(
+                            'type' => 'select',
+                            'label' => false,
+                            'style' => 'width: 100% !important',
+                            'empty' => 'Tất cả',
+                            'options' => $recruitments_option,
+                            'default' => '',
+                            'id' => 'recruitmentId',
+                            'name' => 'recruitmentId'
+                        ));
+                        ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12 text-right">
+                        <button type="submit" class="btn btn-xs btn-warning"> Tìm <i class="fa fa-search"></i> </button>
+                        <a href="/admin/recruitments" type="submit" class="btn btn-xs btn-danger"> Xóa <i class="fa fa-remove"></i> </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--        Search-->
+
         <div class="page-content">
             <div class="page-header">
                 <h1>
@@ -57,7 +100,7 @@
                                 $arr_id_recruitment[$i] = $item['Recruitment']['id'];
                                 ?>
                                 <tr>
-                                    <td>
+                                    <td class="text-center">
                                         <?php
                                         echo $number + ($i + 1);
                                         $i = $i + 1;

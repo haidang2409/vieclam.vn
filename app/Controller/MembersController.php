@@ -75,8 +75,7 @@ class MembersController extends AppController
 
                 }
                 //
-                $this->Session->setFlash('Đăng ký tài khoản thành công', 'flashSuccess');
-                $this->redirect('/dang-nhap');
+                $this->requestAction('/dang-nhap', array('data' => array('email' => $email, 'password' => $this->request->data['Member']['password'])));
             }
             else
             {
@@ -192,13 +191,128 @@ class MembersController extends AppController
         $this->Session->delete('S_Member');
         $this->redirect($this->referer());
     }
-    function forget_password()
+    public function forget_password()
     {
+        //
+        if($this->Session->check('Member'))
+        {
+            $this->redirect('/');
+        }
+        $this->set(array('title' => 'Quên mật khẩu'));
+        //
+        if($this->request->is('post') || $this->request->is('put'))
+        {
+            $email = isset($this->request->data['email'])? $this->request->data['email']: '';
+            $this->Member->recursive = -1;
+            $member = $this->Member->findByEmail($email);
+            if(!$member)
+            {
+                $this->Session->setFlash('Không tìm thấy email');
+            }
+            else
+            {
+                $code_change = md5(md5($email . mt_rand()));
+                $fullname = htmlentities($member['Member']['fullname'], ENT_QUOTES, 'UTF8');
+                $this->Member->recursive = -1;
+                if($this->Member->updateAll(array('code_change_password' => "'$code_change'"), array('Member.id' => $member['Member']['id'], 'Member.email' => $email)))
+                {
+                    //Send mail
+                    $Email = new CakeEmail('smtp');
+                    $Email->to($email);
+                    $Email->subject('Yêu cầu đặt lại mật khẩu');
+                    $Email->emailFormat('html');
+                    $Email->message();
+                    $body = $this->Mailtemplate->email_forget_password_member($fullname, $email, $code_change);
+                    try
+                    {
+                        $Email->send($body);
+                    }
+                    catch (Exception $exception)
+                    {
 
+                    }
+                    $this->redirect('/members/forget_password_status?status=sent_email&code=' . md5(mt_rand()));
+                }
+            }
+        }
     }
-    function reset_password()
+    public function reset_password()
     {
-
+        $code = isset($this->params['url']['code'])? $this->params['url']['code']: '';
+        $email = isset($this->params['url']['email'])? $this->params['url']['email']: '';
+        //
+        $this->Member->recursive = -1;
+        $member = $this->Member->find('first', array(
+           'fields' => array(
+               'Member.email',
+               'Member.id'
+           ),
+            'conditions' => array(
+                'Member.email' => $email,
+                'Member.code_change_password' => $code
+            )
+        ));
+        if(!$member)
+        {
+            $this->redirect('/members/forget_password_status?status=fail&code=' . md5(mt_rand()));
+        }
+        else
+        {
+            //
+            $this->set(array('title' => 'Đặt lại mật khẩu'));
+        }
+        if($this->request->is('post') || $this->request->is('put'))
+        {
+            $password = $this->request->data['password_new'];
+            $re_password = $this->request->data['re_password_new'];
+            if(trim($password) == '')
+            {
+                $this->Session->setFlash('Vui lòng nhập mật khẩu');
+            }
+            else
+            {
+                if(trim($re_password) == '')
+                {
+                    $this->Session->setFlash('Vui lòng nhập lại mật khẩu');
+                }
+                else
+                {
+                    if(strlen($password) < 8)
+                    {
+                        $this->Session->setFlash('Mật khẩu từ 8 ký tự');
+                    }
+                    else
+                    {
+                        if($password != $re_password)
+                        {
+                            $this->Session->setFlash('Mật khẩu không khớp nhau');
+                        }
+                        else
+                        {
+                            $pass_new = AuthComponent::password($re_password);
+                            $data_update_member = array(
+                                'Member.id' => $member['Member']['id'],
+                                'Member.email' => $email,
+                                'Member.code_change_password' => $code
+                            );
+                            if($this->Member->updateAll(array('password' => "'$pass_new'", 'code_change_password' => "''"), array($data_update_member)))
+                            {
+                                $this->redirect('/members/forget_password_status?status=success&code=' . md5(mt_rand()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    function forget_password_status()
+    {
+        $status = isset($this->params['url']['status'])? $this->params['url']['status']: '';
+        if($status == '')
+        {
+            $this->redirect('/');
+        }
+        $this->set(array('status' => $status));
     }
     function update_profile()
     {

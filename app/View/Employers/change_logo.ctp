@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="min-height: 450px">
     <div class="row">
         <div class="col-sm-3">
             <?php
@@ -38,7 +38,6 @@
                             <?php echo $this->Form->input('website', array('id' => 'website', 'label' => false, 'class' => 'form-control', 'title' => 'Địa chỉ', 'value' => $employers['Employer']['website']));?>
                         </div>
                     </div>
-                    <hr class="dotted">
                     <div class="form-group">
                         <label for="" class="col-sm-3 control-label">
                             Video <font class="label-require">(*)</font>

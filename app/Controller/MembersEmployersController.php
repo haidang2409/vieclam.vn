@@ -98,7 +98,7 @@ class MembersEmployersController extends AppController
         {
             $employer_id = $this->Session->read('S_Employer.id');
             $resume_id = $this->request->data['resume_id'];
-            if($this->MemberEmployer->updateAll(array('MemberEmployer.is_saved' => 0), array('MemberEmployer.id' => $resume_id, 'MemberEmployer.employer_id' => $employer_id)))
+            if($this->MemberEmployer->updateAll(array('MemberEmployer.is_saved' => 0, 'MemberEmployer.folder_id' => null), array('MemberEmployer.id' => $resume_id, 'MemberEmployer.employer_id' => $employer_id)))
             {
                 echo json_encode(array('status' => 'success'));
             }

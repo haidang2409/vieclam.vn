@@ -511,11 +511,123 @@ height: 38px !important;
     font-size: 1.1em;
     font-style: italic;
 }
+    /*Index*/
+.info-box
+{
+    border: 1px solid #D5D5D5;
+    min-height: 100px;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    box-shadow: 2px 2px 3px;
+    margin-top: 10px;
+}
+.info-box:hover
+{
+    background-color: #f9f9f9;
+}
+.info-box .icon
+{
+    padding: 15px 10px 10px 15px;
+    width: 30%;
+    float: left;
+}
+.info-box .icon i
+{
+    font-size: 3em;
+    color: #199EB8;
+}
+.info-box .content
+{
+    width: 70%;
+    float: left;
+}
+.info-box .content .title
+{
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.info-alert
+{
+    font-size: 16px;
+    line-height: 30px;
+    margin-top: 10px;
+    padding: 20px;
+    border: 1px solid rgba(236, 151, 31, 0.24);
+    border-left: 4px solid #ec971f;
+}
+
+.employer-info
+{
+    margin: 10px auto;
+}
+.employer-info .image img
+{
+    margin-top: 15px;
+    border: 1px dashed #D5D5D5;
+    border-radius: 5px;
+    width: 120px;
+    max-height: 100px;
+}
+    /*End Index*/
+    /*Update Benefit*/
+.container-benefit-update .input-group-addon
+{
+    background-color: #ffffff;
+}
+.container-benefit-update .input-group-addon i
+{
+    width: 20px;
+}
+.dropdown-benefit-option
+{
+    margin-bottom: -1px;
+    padding-bottom: 0;
+    margin-left: 5px;
+    width: 100%;
+}
+.dropdown-benefit-option li
+{
+    margin: auto 0 !important;
+    width: 33.33%;
+    float: left;
+}
+.dropdown-benefit-option li a
+{
+    font-size: 13px !important;
+}
+.dropdown-benefit-option li a.selected
+{
+    color: #00aa00 !important;
+}
+.dropdown-benefit-option li:hover .a-no-bg
+{
+    background-color: transparent !important;
+    color: #00aa00;
+}
+.dropdown-benefit-option li a:hover
+{
+    background-color: transparent !important;
+    color: #00aa00;
+}
+.container-benefit-update .remove-benefit i
+{
+    cursor: pointer;
+    padding: 10px 5px;
+}
+.container-benefit-update .remove-benefit:hover
+{
+    color: #E74C3C;
+}
+    /*End Update Benefit*/
+
 
     /*Footer*/
 .footer
 {
     margin-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     background-color: #dedede;
 }
 .footer h3
@@ -595,9 +707,17 @@ height: 38px !important;
     {
         margin-top: 10px;
     }
+    .dropdown-benefit-option li
+    {
+        width: 50% !important;
+    }
 }
 @media (max-width: 530px) {
     .select2-results__option
+    {
+        width: 100% !important;
+    }
+    .dropdown-benefit-option li
     {
         width: 100% !important;
     }
